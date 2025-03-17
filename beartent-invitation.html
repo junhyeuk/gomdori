@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곰돌이포차 확장 이전 오픈 초대장</title>
+    <!-- 폰트 파일 미리 로드 -->
+    <link rel="preload" href="BMEULJIROTTF.TTF" as="font" type="font/ttf" crossorigin>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        /* 을지로체 폰트 적용 */
+        @font-face {
+            font-family: 'BMEuljiro';
+            src: url('BMEULJIROTTF.TTF') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'BMEuljiro', sans-serif !important;
+        }
+        
+        body {
+            background-color: #f9f3e6;
+            color: #5d4037;
+            line-height: 1.8;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* 폰트 로딩 완료 후 적용할 스타일 */
+        .fonts-loaded {
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .invitation-card {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 50px 20px 30px;
+            margin: 40px auto 0;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: visible;
+        }
+        
+        .invitation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to right, #e74c3c, #e67e22, #f1c40f);
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .envelope-seal {
+            width: 80px;
+            height: 80px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 4px solid #fff;
+            z-index: 10;
+        }
+        
+        .ribbon {
+            position: absolute;
+            top: 30px;
+            right: -30px;
+            background-color: #e74c3c;
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 15px;
+        }
+        
+        .invitation-text {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #5d4037;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: #7d5d50;
+            margin-bottom: 10px;
+        }
+        
+        .opening-date {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #e74c3c;
+            border-top: 1px dashed #ccc;
+            border-bottom: 1px dashed #ccc;
+            padding: 10px 0;
+        }
+        
+        .greeting {
+            text-align: center;
+            margin: 25px 0;
+            font-size: 17px;
+            line-height: 1.7;
+            color: #5d4037;
+            background-color: #fff9f0;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .store-image-container {
+            width: 100%;
+            margin: 25px auto;
+            text-align: center;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 5px solid white;
+            position: relative;
+        }
+        
+        .store-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .naver-search-result {
+            background-color: #ffffff;
+            color: #333;
+            text-align: left;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border: 1px solid #e6e6e6;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .naver-header {
+            margin-bottom: 10px;
+        }
+        
+        .naver-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .naver-rating-row {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .naver-rating {
+            color: #ff5757;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .naver-review {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .naver-simple-links {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+            padding: 8px 0;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .naver-link {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .naver-link:hover {
+            color: #03c75a;
+            text-decoration: underline;
+        }
+        
+        .info-section {
+            background-color: #fff9f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0e4d7;
+        }
+        
+        .info-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #5d4037;
+            text-align: center;
+            position: relative;
+        }
+        
+        .info-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 2px;
+            background-color: #e74c3c;
+            margin: 5px auto 0;
+        }
+        
+        .info-content {
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .menu-highlight {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .menu-highlight-text {
+            font-style: italic;
+            color: #7d5d50;
+            line-height: 1.8;
+        }
+        
+        .rsvp-text {
+            text-align: center;
+            margin: 25px 0 15px;
+            font-style: italic;
+            color: #7d5d50;
+            line-height: 1.8;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #a1887f;
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        .separator {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px dashed #d7ccc8;
+        }
+        
+        .separator::before {
+            margin-right: 10px;
+        }
+        
+        .separator::after {
+            margin-left: 10px;
+        }
+        
+        .separator-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            font-size: 14px;
+        }
+
+        /* 메뉴판 스타일 */
+        .menu-board {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff9f0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0e4d7;
+            font-size: 16px;
+            color: #5d4037;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-board h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #e74c3c;
+            text-align: center;
+        }
+
+        .menu-board h4 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 15px 0 10px;
+            color: #5d4037;
+            padding-left: 5px;
+            border-left: 3px solid #e74c3c;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .menu-board h4::after {
+            content: '▼';
+            font-size: 12px;
+            color: #e74c3c;
+        }
+
+        .menu-board h4.collapsed::after {
+            content: '▶';
+        }
+
+        .menu-board ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .menu-board ul.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .menu-board ul li {
+            display: flex;
+            justify-content: space-between;
+            padding: 7px 0;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .menu-board ul li:last-child {
+            border-bottom: none;
+        }
+
+        .menu-preview {
+            height: 200px; /* 초기 높이 제한 */
+            overflow: hidden;
+            position: relative;
+            transition: height 0.5s ease-in-out;
+        }
+
+        .menu-preview.expanded {
+            height: auto;
+        }
+
+        .menu-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom, rgba(255, 249, 240, 0), rgba(255, 249, 240, 1));
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 10px;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .view-more-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .view-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-toggle {
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: #e74c3c;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="invitation-card">
+            <div class="envelope-seal">초대</div>
+            <div class="ribbon">NEW</div>
+            
+            <div class="header">
+                <div class="invitation-text">🎉 확장 이전 오픈 초대장 🎉</div>
+                <div class="title">곰돌이포차</div>
+                <div class="subtitle">정성과 맛으로 모시겠습니다</div>
+                <div class="opening-date">2025년 3월 확장 이전 오픈</div>
+            </div>
+            
+            <div class="greeting">
+                안녕하십니까~~<br>
+                그동안 곰돌이포차를 아껴주신 모든 분들께 진심으로 감사드립니다.^^<br>
+                여러분의 성원에 힘입어 더 넓고 쾌적한 공간으로 확장 이전하게 되었습니다.<br>
+                변함없는 손맛과 푸짐한 인심으로 여러분을 기다리겠습니다.<br>
+                오셔서 맛있는 음식과 정겨운 분위기를 함께 즐겨주세요.<br>
+                확장 이전 기념으로 푸짐한 오픈 이벤트도 준비되어 있으니<br>
+                많은 관심과 방문 부탁드립니다.
+            </div>
+            
+            <div class="store-image-container">
+                <img src="images/storebg.jpeg" alt="곰돌이포차 전경" class="store-image">
+            </div>
+            
+            <div class="naver-search-result">
+                <div class="naver-header">
+                    <span class="naver-title">곰돌이포차 한식</span>
+                </div>
+                <div class="naver-rating-row">
+                    <span class="naver-rating">★ 4.64</span>
+                    <span class="naver-review">리뷰 33+</span>
+                </div>
+                
+                <div class="naver-simple-links">
+                    <a href="https://naver.me/xdpQiNU7#reviewTab" class="naver-link" target="_blank">방문자 리뷰</a>
+                    <a href="https://search.naver.com/search.naver?query=곰돌이포차+대구+블로그" class="naver-link" target="_blank">블로그 리뷰</a>
+                    <a href="https://map.naver.com/p/directions/-/14314003.9086945,4282384.7259418,%EB%8C%80%EA%B5%AC%20%EB%B6%81%EA%B5%AC%20%EB%8C%80%ED%98%84%EB%82%A8%EB%A1%9C5%EA%B8%B8%204-1/-/transit?c=15.00,0,0,0,dh" class="naver-link" target="_blank">길찾기</a>
+                    <a href="javascript:void(0);" onclick="navigator.share({title: '곰돌이포차', url: 'https://naver.me/xdpQiNU7'})" class="naver-link">공유</a>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">찾아오시는 길</div>
+                <div class="info-content">
+                    <strong>주소:</strong> 대구 북구 대현남로5길 4-1 1층
+                </div>
+                <div class="info-content">
+                    <strong>전화번호:</strong> 053-955-4521
+                </div>
+                <div class="info-content">
+                    <strong>영업시간:</strong> 오후 4시 ~ 새벽 1시 (연중무휴)
+                </div>
+            </div>
+            
+            <div class="separator">
+                <div class="separator-icon">★</div>
+            </div>
+            
+            <div class="menu-highlight">
+                <div class="info-title">정성담은 메뉴</div>
+                <div class="menu-highlight-text">
+                    30년 경력의 안주 명인이 준비한 특별 메뉴!<br>
+                    전통류 (10,000원), 탕종류 (18,000원)<br>
+                    볶음종류 (15,000원), 구이종류 (13,000원)<br>
+                    그리고 곰돌이포차 시그니처 안주를 맛보세요.
+                </div>
+            </div>
+            
+            <!-- 메뉴판 섹션 -->
+            <div class="menu-board">
+                <h3>메뉴판</h3>
+                <div class="menu-preview">
+                    <div class="menu-content">
+                        <h4 data-category="찜류">찜류</h4>
+                        <ul>
+                            <li><span>아구찜</span><span>35,000원</span></li>
+                            <li><span>돼지수육</span><span>30,000원</span></li>
+                        </ul>
+                        <h4 data-category="탕류">탕류</h4>
+                        <ul>
+                            <li><span>아구탕</span><span>35,000원</span></li>
+                            <li><span>소불고기전골</span><span>30,000원</span></li>
+                            <li><span>닭도리탕</span><span>25,000원</span></li>
+                            <li><span>동태탕</span><span>18,000원</span></li>
+                            <li><span>돼지김치찌개</span><span>18,000원</span></li>
+                            <li><span>참치김치찌개</span><span>15,000원</span></li>
+                            <li><span>명태알곤탕</span><span>15,000원</span></li>
+                            <li><span>얼큰어묵탕</span><span>13,000원</span></li>
+                            <li><span>계란탕</span><span>5,000원</span></li>
+                        </ul>
+                        <h4 data-category="전류">전류</h4>
+                        <ul>
+                            <li><span>해물부추전</span><span>12,000원</span></li>
+                            <li><span>호박전</span><span>10,000원</span></li>
+                            <li><span>감자전</span><span>10,000원</span></li>
+                        </ul>
+                        <h4 data-category="숙회류">숙회류</h4>
+                        <ul>
+                            <li><span>오징어숙회</span><span>15,000원</span></li>
+                        </ul>
+                        <h4 data-category="마른안주류">마른안주류</h4>
+                        <ul>
+                            <li><span>노가리</span><span>13,000원</span></li>
+                            <li><span>먹태</span><span>13,000원</span></li>
+                            <li><span>화채</span><span>10,000원</span></li>
+                        </ul>
+                        <h4 data-category="무침류">무침류</h4>
+                        <ul>
+                            <li><span>오징어무침</span><span>15,000원</span></li>
+                            <li><span>꼬막무침</span><span>13,000원</span></li>
+                        </ul>
+                        <h4 data-category="볶음류">볶음류</h4>
+                        <ul>
+                            <li><span>낙지볶음</span><span>18,000원</span></li>
+                            <li><span>돼지두루치기</span><span>18,000원</span></li>
+                            <li><span>돼지두부김치</span><span>15,000원</span></li>
+                            <li><span>오징어볶음</span><span>15,000원</span></li>
+                            <li><span>새우볶음</span><span>13,000원</span></li>
+                            <li><span>똥집볶음</span><span>13,000원</span></li>
+                            <li><span>양념닭발</span><span>13,000원</span></li>
+                        </ul>
+                        <h4 data-category="구이류">구이류</h4>
+                        <ul>
+                            <li><span>조기구이</span><span>15,000원</span></li>
+                            <li><span>고갈비</span><span>13,000원</span></li>
+                        </ul>
+                        <h4 data-category="식사류">식사류</h4>
+                        <ul>
+                            <li><span>잔치국수</span><span>5,000원</span></li>
+                            <li><span>라면</span><span>4,000원</span></li>
+                            <li><span>우동</span><span>4,000원</span></li>
+                            <li><span>공기밥</span><span>2,000원</span></li>
+                        </ul>
+                        <h4 data-category="주류">주류</h4>
+                        <ul>
+                            <li><span>소주</span><span>4,000원</span></li>
+                            <li><span>맥주</span><span>4,000원</span></li>
+                            <li><span>막걸리</span><span>4,000원</span></li>
+                            <li><span>음료수</span><span>2,000원</span></li>
+                        </ul>
+                    </div>
+                    <div class="menu-overlay">
+                        <button class="view-more-btn">메뉴 자세히 보기</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 지도 컨테이너와 버튼 제거 -->
+            <div class="rsvp-text">
+                "사람 냄새 나는 정겨운 포차에서<br>
+                옛 친구들, 가족들과 함께<br>
+                인생의 소중한 추억을 만들어 보세요."
+            </div>
+            
+            <div class="footer">
+                곰돌이 포차 (053-955-4521)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 폰트 로딩 확인
+        document.fonts.ready.then(function() {
+            // 폰트가 로드되면 body에 클래스 추가
+            document.body.classList.add('fonts-loaded');
+            console.log('BMEuljiro font has been loaded');
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // 폰트 로딩을 강제로 트리거
+            const fontLoader = new FontFace('BMEuljiro', 'url(BMEULJIROTTF.TTF)');
+            fontLoader.load().then(function(loaded_face) {
+                document.fonts.add(loaded_face);
+                document.body.style.fontFamily = '"BMEuljiro", sans-serif';
+                console.log('Font loaded via JavaScript');
+            }).catch(function(error) {
+                console.log('Font loading failed: ' + error);
+            });
+            
+            // 메뉴판 자세히 보기 기능
+            const menuPreview = document.querySelector('.menu-preview');
+            const menuOverlay = document.querySelector('.menu-overlay');
+            const viewMoreBtn = document.querySelector('.view-more-btn');
+            const menuContent = document.querySelector('.menu-content');
+            
+            if (viewMoreBtn) {
+                viewMoreBtn.addEventListener('click', function() {
+                    menuPreview.classList.toggle('expanded');
+                    menuOverlay.classList.toggle('hidden');
+                    
+                    if (menuPreview.classList.contains('expanded')) {
+                        viewMoreBtn.textContent = '메뉴 접기';
+                    } else {
+                        viewMoreBtn.textContent = '메뉴 자세히 보기';
+                    }
+                });
+            }
+            
+            // 메뉴 카테고리 토글 기능
+            const categoryHeaders = document.querySelectorAll('.menu-board h4');
+            
+            // 첫 두 개 카테고리만 보이고 나머지는 접기 (초기 상태)
+            categoryHeaders.forEach((header, index) => {
+                if (index > 1) {
+                    header.classList.add('collapsed');
+                    const nextUl = header.nextElementSibling;
+                    if (nextUl && nextUl.tagName === 'UL') {
+                        nextUl.classList.add('collapsed');
+                    }
+                }
+                
+                header.addEventListener('click', function(e) {
+                    // 이벤트 버블링 방지
+                    e.stopPropagation();
+                    
+                    this.classList.toggle('collapsed');
+                    const nextUl = this.nextElementSibling;
+                    if (nextUl && nextUl.tagName === 'UL') {
+                        nextUl.classList.toggle('collapsed');
+                    }
+                    
+                    // 모든 카테고리가 접혀있는지 또는 펼쳐있는지 확인하여 버튼 텍스트 업데이트
+                    updateExpandButtonText();
+                });
+            });
+            
+            // 모든 카테고리 접기/펼치기 버튼 추가
+            const menuTitle = document.querySelector('.menu-board h3');
+            const expandAllBtn = document.createElement('button');
+            expandAllBtn.textContent = '전체 펼치기';
+            expandAllBtn.className = 'category-toggle';
+            expandAllBtn.style.marginLeft = '10px';
+            menuTitle.appendChild(expandAllBtn);
+            
+            // 현재 펼쳐진 상태인지 확인하는 함수
+            function areAllCategoriesExpanded() {
+                let expanded = true;
+                categoryHeaders.forEach(header => {
+                    if (header.classList.contains('collapsed')) {
+                        expanded = false;
+                    }
+                });
+                return expanded;
+            }
+            
+            // 현재 접힌 상태인지 확인하는 함수
+            function areAllCategoriesCollapsed() {
+                let collapsed = true;
+                categoryHeaders.forEach(header => {
+                    if (!header.classList.contains('collapsed')) {
+                        collapsed = false;
+                    }
+                });
+                return collapsed;
+            }
+            
+            // 버튼 텍스트 업데이트 함수
+            function updateExpandButtonText() {
+                if (areAllCategoriesExpanded()) {
+                    expandAllBtn.textContent = '전체 접기';
+                } else {
+                    expandAllBtn.textContent = '전체 펼치기';
+                }
+            }
+            
+            // 모든 카테고리 접기/펼치기 처리
+            expandAllBtn.addEventListener('click', function(e) {
+                // 이벤트 버블링 방지
+                e.stopPropagation();
+                
+                const shouldExpand = !areAllCategoriesExpanded();
+                
+                categoryHeaders.forEach(header => {
+                    const nextUl = header.nextElementSibling;
+                    if (shouldExpand) {
+                        // 펼치기
+                        header.classList.remove('collapsed');
+                        if (nextUl && nextUl.tagName === 'UL') {
+                            nextUl.classList.remove('collapsed');
+                        }
+                    } else {
+                        // 접기
+                        header.classList.add('collapsed');
+                        if (nextUl && nextUl.tagName === 'UL') {
+                            nextUl.classList.add('collapsed');
+                        }
+                    }
+                });
+                
+                // 첫 두 개 카테고리는 항상 펼침 옵션을 제거하여 전체 접기가 제대로 작동하도록 함
+                // for (let i = 0; i < Math.min(2, categoryHeaders.length); i++) {
+                //     categoryHeaders[i].classList.remove('collapsed');
+                //     const nextUl = categoryHeaders[i].nextElementSibling;
+                //     if (nextUl && nextUl.tagName === 'UL') {
+                //         nextUl.classList.remove('collapsed');
+                //     }
+                // }
+                
+                expandAllBtn.textContent = shouldExpand ? '전체 접기' : '전체 펼치기';
+                
+                // 메뉴판이 접혀있는 상태에서 전체 펼치기를 누르면 메뉴판도 자동으로 펼치기
+                if (shouldExpand && !menuPreview.classList.contains('expanded')) {
+                    menuPreview.classList.add('expanded');
+                    menuOverlay.classList.add('hidden');
+                    viewMoreBtn.textContent = '메뉴 접기';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
