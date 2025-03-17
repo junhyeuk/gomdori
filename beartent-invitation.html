@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>곰돌이포차 확장 이전 오픈 초대장</title>
     <!-- 폰트 파일 미리 로드 -->
-    <link rel="preload" href="BMEULJIROTTF.TTF" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="BMEULJIROTTF.ttf" as="font" type="font/ttf" crossorigin>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
         /* 을지로체 폰트 적용 */
         @font-face {
             font-family: 'BMEuljiro';
-            src: url('BMEULJIROTTF.TTF') format('truetype');
+            src: url('BMEULJIROTTF.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -623,7 +623,7 @@
         
         document.addEventListener('DOMContentLoaded', function() {
             // 폰트 로딩을 강제로 트리거
-            const fontLoader = new FontFace('BMEuljiro', 'url(BMEULJIROTTF.TTF)');
+            const fontLoader = new FontFace('BMEuljiro', 'url(BMEULJIROTTF.ttf)');
             fontLoader.load().then(function(loaded_face) {
                 document.fonts.add(loaded_face);
                 document.body.style.fontFamily = '"BMEuljiro", sans-serif';
