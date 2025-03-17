@@ -8,7 +8,7 @@
     <link rel="preload" href="BMEULJIROTTF.ttf" as="font" type="font/ttf" crossorigin>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- 카카오 SDK 추가 -->
-    <script async src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" 
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" 
       integrity="sha384-l+x0qGkfsUqCQ8EQI5PrBJktzLZZzG3aE8jxULJZGH8mRKnJK7V3yAEjFUEUfz4F" 
       crossorigin="anonymous"></script>
     <style>
@@ -695,38 +695,77 @@
         
         // 카카오 JavaScript 키
         const kakaoJSKey = '944f705c8d8ce4b8ae9653996836e1c3';
+        let kakaoInitialized = false;
+        let initAttempts = 0;
+        const maxAttempts = 5;
         
-        // 페이지 로드 시 카카오 SDK 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            // 카카오 SDK가 로드된 후 초기화 시도
-            function initKakao() {
-                if (window.Kakao) {
-                    if (!Kakao.isInitialized()) {
-                        console.log('카카오 SDK 초기화 시작');
-                        Kakao.init(kakaoJSKey);
-                        console.log("Kakao SDK 초기화 상태:", Kakao.isInitialized());
-                    }
+        // 카카오 SDK 초기화 함수
+        function initKakao() {
+            if (typeof Kakao === 'undefined') {
+                console.log('카카오 SDK가 아직 로드되지 않았습니다.');
+                
+                // 최대 시도 횟수 체크
+                if (initAttempts < maxAttempts) {
+                    initAttempts++;
+                    console.log(`초기화 시도 ${initAttempts}/${maxAttempts}`);
+                    setTimeout(initKakao, 1000); // 1초 후 재시도
                 } else {
-                    console.log('카카오 SDK가 아직 로드되지 않았습니다. 1초 후 다시 시도합니다.');
-                    setTimeout(initKakao, 1000); // 1초 후 다시 시도
+                    console.error('카카오 SDK 로드 실패! 페이지를 새로고침 하거나 다시 시도해주세요.');
                 }
+                return;
             }
             
-            // 초기화 시도
-            initKakao();
+            if (!Kakao.isInitialized()) {
+                console.log('카카오 SDK 초기화 시작');
+                try {
+                    Kakao.init(kakaoJSKey);
+                    kakaoInitialized = Kakao.isInitialized();
+                    console.log("카카오 SDK 초기화 상태:", kakaoInitialized);
+                    
+                    if (kakaoInitialized) {
+                        console.log('카카오 SDK 초기화 성공!');
+                    } else {
+                        console.error('카카오 SDK 초기화 실패!');
+                    }
+                } catch (error) {
+                    console.error('카카오 SDK 초기화 중 오류 발생:', error);
+                }
+            } else {
+                kakaoInitialized = true;
+                console.log('카카오 SDK가 이미 초기화되어 있습니다.');
+            }
+        }
+        
+        // 다양한 이벤트에서 초기화 시도
+        // DOM 로드될 때
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initKakao, 500); // DOM 로드 후 약간의 지연을 두고 초기화 시도
+        });
+        
+        // 페이지 모든 리소스 로드될 때
+        window.addEventListener('load', function() {
+            if (!kakaoInitialized) {
+                initKakao();
+            }
         });
         
         // 카카오톡 공유 함수
         function shareToKakao() {
             console.log('카카오톡 공유 시도...');
             
-            // 카카오 SDK가 로드되었는지 확인
+            // 카카오 SDK가 로드되지 않았다면 로드 시도
             if (typeof Kakao === 'undefined') {
                 console.error('카카오 SDK가 로드되지 않았습니다.');
-                alert('카카오톡 공유 기능을 사용할 수 없습니다. 페이지를 새로고침 후 다시 시도해 주세요.');
+                alert('카카오톡 공유 기능을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.');
+                
+                // 페이지 새로고침
+                if (confirm('페이지를 새로고침하여 다시 시도하시겠습니까?')) {
+                    location.reload();
+                }
                 return;
             }
             
+            // 초기화 되지 않았다면 초기화
             if (!Kakao.isInitialized()) {
                 console.log('Kakao SDK가 초기화되지 않았습니다. 초기화를 시도합니다.');
                 Kakao.init(kakaoJSKey);
@@ -738,6 +777,10 @@
                 
                 // 이미지 URL - 절대 경로 사용
                 const imageUrl = 'https://gomdori-junhyeuks-projects.vercel.app/images/storebg.jpeg';
+                
+                // 현재 도메인이 공유 가능한지 콘솔에 표시
+                console.log('현재 URL:', currentUrl);
+                console.log('카카오 개발자 사이트에 현재 도메인이 등록되어 있는지 확인하세요.');
                 
                 // SDK를 사용한 공유
                 Kakao.Share.sendDefault({
@@ -759,7 +802,10 @@
                                 webUrl: currentUrl
                             }
                         }
-                    ]
+                    ],
+                    serverCallbackArgs: {
+                        source: "web"
+                    }
                 });
                 
                 console.log('카카오톡 공유 함수 호출 완료');
