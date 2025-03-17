@@ -546,6 +546,11 @@
                 </div>
             </div>
             
+            <!-- 추가: 카카오톡 직접 공유 버튼 -->
+            <div style="margin-top: 10px; text-align: center;">
+                <button id="kakao-share-btn" class="kakao-share-btn" onclick="shareToKakao()">카카오톡으로 공유하기</button>
+            </div>
+            
             <div class="info-section">
                 <div class="info-title">찾아오시는 길</div>
                 <div class="info-content">
@@ -676,161 +681,29 @@
             console.log('BMEuljiro font has been loaded');
         });
         
-        // 카카오 SDK가 로드되었는지 확인하는 변수
+        // 카카오 SDK 관련 변수
         var kakaoSDKLoaded = false;
         var isLocalEnvironment = false;
+        // 카카오 JS 키 - 실제 앱 키로 변경 필요
+        var kakaoJSKey = '6d497e3027c3b7fc61a9d46fa80147c3';
 
         // 현재 환경이 로컬 환경인지 확인
         function checkIfLocalEnvironment() {
             const hostname = window.location.hostname;
-            return hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.') || hostname.startsWith('10.');
+            return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '' || hostname.startsWith('192.168.') || hostname.startsWith('10.');
         }
 
-        // 카카오 SDK 로드 확인 - 강화된 버전
-        window.addEventListener('load', function() {
+        // DOM이 완전히 로드된 후 카카오 SDK 초기화
+        document.addEventListener('DOMContentLoaded', function() {
             // 로컬 환경 확인
             isLocalEnvironment = checkIfLocalEnvironment();
             console.log('로컬 환경 여부:', isLocalEnvironment);
-
+            
             // 카카오 SDK 초기화 시도
-            if (typeof Kakao !== 'undefined') {
-                try {
-                    // 카카오 SDK 초기화
-                    Kakao.init('6d497e3027c3b7fc61a9d46fa80147c3');
-                    kakaoSDKLoaded = Kakao.isInitialized();
-                    console.log('Kakao SDK initialized:', kakaoSDKLoaded);
-                } catch (e) {
-                    console.error('Kakao SDK initialization failed:', e);
-                }
-            } else {
-                console.error('Kakao SDK not loaded');
-            }
-        });
-        
-        // 개선된 카카오톡 공유 함수
-        function shareToKakao() {
-            // 로컬 환경에서는 대체 동작 수행
-            if (isLocalEnvironment) {
-                alert('로컬 환경에서는 카카오톡 공유 기능을 사용할 수 없습니다.\n실제 배포 환경에서 사용해주세요.');
-                console.log('로컬 환경에서 카카오톡 공유 시도');
-                return;
-            }
+            initializeKakaoSDK();
             
-            if (!kakaoSDKLoaded) {
-                alert('카카오톡 공유 기능을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.');
-                console.error('Kakao SDK not loaded or not initialized');
-                
-                // 다시 초기화 시도
-                if (typeof Kakao !== 'undefined') {
-                    try {
-                        Kakao.init('6d497e3027c3b7fc61a9d46fa80147c3');
-                        kakaoSDKLoaded = Kakao.isInitialized();
-                        console.log('Kakao SDK re-initialized:', kakaoSDKLoaded);
-                        if (kakaoSDKLoaded) {
-                            alert('카카오톡 SDK가 초기화되었습니다. 다시 공유 버튼을 클릭해주세요.');
-                        }
-                    } catch (e) {
-                        console.error('Kakao SDK re-initialization failed:', e);
-                    }
-                }
-                return;
-            }
+            // 나머지 DOMContentLoaded 이벤트 핸들러...
             
-            try {
-                // 현재 URL로부터 절대 URL 생성
-                const currentUrl = window.location.href;
-                // 도메인에 상관없이 사용할 수 있는 이미지 URL (Vercel 배포 주소 사용)
-                const imageUrl = 'https://gomdori-junhyeuks-projects.vercel.app/images/storebg.jpeg';
-                
-                Kakao.Share.sendDefault({
-                    objectType: 'feed',
-                    content: {
-                        title: '곰돌이포차 확장 이전 오픈 초대장',
-                        description: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
-                        imageUrl: imageUrl,
-                        link: {
-                            mobileWebUrl: currentUrl,
-                            webUrl: currentUrl,
-                        },
-                    },
-                    buttons: [
-                        {
-                            title: '초대장 보기',
-                            link: {
-                                mobileWebUrl: currentUrl,
-                                webUrl: currentUrl,
-                            },
-                        },
-                    ],
-                    // 카카오톡 공유 실패 시 콘솔에 로그 출력
-                    callback: function() {
-                        console.log('카카오톡 공유 성공');
-                    },
-                    serverCallbackArgs: {
-                        name: '곰돌이포차',
-                        type: 'invitation'
-                    },
-                });
-            } catch (e) {
-                console.error('카카오톡 공유 실패:', e);
-                alert('카카오톡 공유 중 오류가 발생했습니다. 다시 시도해 주세요.');
-            }
-        }
-        
-        // 기존 공유 함수 유지
-        function shareContent() {
-            const shareData = {
-                title: '곰돌이포차 확장 이전 오픈 초대장',
-                text: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
-                url: window.location.href
-            };
-            
-            // 모바일 기기에서 Web Share API 지원 여부 확인
-            if (navigator.share) {
-                navigator.share(shareData)
-                    .then(() => console.log('공유 성공'))
-                    .catch((error) => console.log('공유 실패:', error));
-            } else {
-                // 데스크톱이나 Web Share API를 지원하지 않는 기기에서는 URL 복사
-                copyToClipboard(window.location.href);
-                
-                // 토스트 메시지 표시
-                const toast = document.getElementById('toastMessage');
-                toast.style.display = 'block';
-                
-                // 3초 후 토스트 메시지 숨기기
-                setTimeout(() => {
-                    toast.style.display = 'none';
-                }, 3000);
-            }
-        }
-        
-        // 클립보드에 텍스트 복사하는 함수
-        function copyToClipboard(text) {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text)
-                    .then(() => console.log('텍스트 복사 성공'))
-                    .catch((error) => console.log('텍스트 복사 실패:', error));
-            } else {
-                // 구형 브라우저용 복사 메서드
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                textarea.style.position = 'fixed';  // 화면에서 숨김
-                document.body.appendChild(textarea);
-                textarea.select();
-                
-                try {
-                    document.execCommand('copy');
-                    console.log('텍스트 복사 성공 (레거시 방식)');
-                } catch (err) {
-                    console.log('텍스트 복사 실패 (레거시 방식):', err);
-                }
-                
-                document.body.removeChild(textarea);
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
             // 폰트 로딩을 강제로 트리거
             const fontLoader = new FontFace('BMEuljiro', 'url(BMEULJIROTTF.ttf)');
             fontLoader.load().then(function(loaded_face) {
@@ -970,6 +843,161 @@
                 }
             });
         });
+        
+        // 카카오 SDK 초기화 함수 - 독립 함수로 분리
+        function initializeKakaoSDK() {
+            if (typeof Kakao === 'undefined') {
+                console.error('Kakao SDK를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.');
+                return false;
+            }
+            
+            try {
+                // 이미 초기화되었는지 확인
+                if (!Kakao.isInitialized()) {
+                    Kakao.init(kakaoJSKey);
+                }
+                
+                kakaoSDKLoaded = Kakao.isInitialized();
+                console.log('Kakao SDK 초기화 상태:', kakaoSDKLoaded);
+                
+                // 초기화 성공 시 버튼 활성화
+                if (kakaoSDKLoaded) {
+                    const shareBtn = document.getElementById('kakao-share-btn');
+                    if (shareBtn) {
+                        shareBtn.disabled = false;
+                    }
+                }
+                
+                return kakaoSDKLoaded;
+            } catch (e) {
+                console.error('Kakao SDK 초기화 실패:', e);
+                return false;
+            }
+        }
+        
+        // 개선된 카카오톡 공유 함수
+        function shareToKakao() {
+            console.log('카카오톡 공유 시도...');
+            
+            // 로컬 환경에서는 테스트용 응답 제공
+            if (isLocalEnvironment) {
+                console.log('로컬 환경에서 테스트 중입니다.');
+                // 로컬 테스트에서도 계속 진행 (테스트 목적)
+            }
+            
+            // SDK가 로드되지 않았다면 초기화 재시도
+            if (!kakaoSDKLoaded) {
+                console.log('카카오 SDK가 초기화되지 않았습니다. 재시도합니다.');
+                kakaoSDKLoaded = initializeKakaoSDK();
+                
+                // 여전히 초기화되지 않았다면 오류 메시지 표시
+                if (!kakaoSDKLoaded) {
+                    alert('카카오톡 공유 기능을 사용할 수 없습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.');
+                    return;
+                }
+            }
+            
+            try {
+                // 현재 URL로부터 절대 URL 생성
+                const currentUrl = window.location.href;
+                // 도메인에 상관없이 사용할 수 있는 이미지 URL (절대 경로 사용)
+                const imageUrl = 'https://gomdori-junhyeuks-projects.vercel.app/images/storebg.jpeg';
+                
+                console.log('공유 URL:', currentUrl);
+                console.log('이미지 URL:', imageUrl);
+                
+                // 공유 데이터 설정
+                Kakao.Share.sendDefault({
+                    objectType: 'feed',
+                    content: {
+                        title: '곰돌이포차 확장 이전 오픈 초대장',
+                        description: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
+                        imageUrl: imageUrl,
+                        link: {
+                            mobileWebUrl: currentUrl,
+                            webUrl: currentUrl,
+                        },
+                    },
+                    buttons: [
+                        {
+                            title: '초대장 보기',
+                            link: {
+                                mobileWebUrl: currentUrl,
+                                webUrl: currentUrl,
+                            },
+                        },
+                    ],
+                    callback: function() {
+                        console.log('카카오톡 공유 성공');
+                    },
+                });
+                console.log('카카오 공유 함수 호출 완료');
+            } catch (e) {
+                console.error('카카오톡 공유 실패:', e);
+                
+                // 오류 메시지 표시
+                if (e.message.includes('not defined') || e.message.includes('undefined')) {
+                    alert('카카오톡 SDK 로드에 실패했습니다. 페이지를 새로고침 후 다시 시도해 주세요.');
+                } else if (e.message.includes('permission')) {
+                    alert('카카오톡 공유 권한이 없습니다. 도메인 등록이 필요할 수 있습니다.');
+                } else {
+                    alert('카카오톡 공유 중 오류가 발생했습니다. 다시 시도해 주세요.');
+                }
+            }
+        }
+        
+        // 기존 공유 함수 유지
+        function shareContent() {
+            const shareData = {
+                title: '곰돌이포차 확장 이전 오픈 초대장',
+                text: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
+                url: window.location.href
+            };
+            
+            // 모바일 기기에서 Web Share API 지원 여부 확인
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .then(() => console.log('공유 성공'))
+                    .catch((error) => console.log('공유 실패:', error));
+            } else {
+                // 데스크톱이나 Web Share API를 지원하지 않는 기기에서는 URL 복사
+                copyToClipboard(window.location.href);
+                
+                // 토스트 메시지 표시
+                const toast = document.getElementById('toastMessage');
+                toast.style.display = 'block';
+                
+                // 3초 후 토스트 메시지 숨기기
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        // 클립보드에 텍스트 복사하는 함수
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text)
+                    .then(() => console.log('텍스트 복사 성공'))
+                    .catch((error) => console.log('텍스트 복사 실패:', error));
+            } else {
+                // 구형 브라우저용 복사 메서드
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';  // 화면에서 숨김
+                document.body.appendChild(textarea);
+                textarea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    console.log('텍스트 복사 성공 (레거시 방식)');
+                } catch (err) {
+                    console.log('텍스트 복사 실패 (레거시 방식):', err);
+                }
+                
+                document.body.removeChild(textarea);
+            }
+        }
     </script>
 </body>
 </html>
