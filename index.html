@@ -8,7 +8,7 @@
     <link rel="preload" href="BMEULJIROTTF.ttf" as="font" type="font/ttf" crossorigin>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- 카카오 SDK 추가 -->
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" 
+    <script async src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" 
       integrity="sha384-l+x0qGkfsUqCQ8EQI5PrBJktzLZZzG3aE8jxULJZGH8mRKnJK7V3yAEjFUEUfz4F" 
       crossorigin="anonymous"></script>
     <style>
@@ -697,15 +697,35 @@
         const kakaoJSKey = '944f705c8d8ce4b8ae9653996836e1c3';
         
         // 페이지 로드 시 카카오 SDK 초기화
-        window.onload = function() {
-            // 카카오 SDK 초기화
-            Kakao.init(kakaoJSKey);
-            console.log("Kakao SDK 초기화 상태:", Kakao.isInitialized());
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            // 카카오 SDK가 로드된 후 초기화 시도
+            function initKakao() {
+                if (window.Kakao) {
+                    if (!Kakao.isInitialized()) {
+                        console.log('카카오 SDK 초기화 시작');
+                        Kakao.init(kakaoJSKey);
+                        console.log("Kakao SDK 초기화 상태:", Kakao.isInitialized());
+                    }
+                } else {
+                    console.log('카카오 SDK가 아직 로드되지 않았습니다. 1초 후 다시 시도합니다.');
+                    setTimeout(initKakao, 1000); // 1초 후 다시 시도
+                }
+            }
+            
+            // 초기화 시도
+            initKakao();
+        });
         
         // 카카오톡 공유 함수
         function shareToKakao() {
             console.log('카카오톡 공유 시도...');
+            
+            // 카카오 SDK가 로드되었는지 확인
+            if (typeof Kakao === 'undefined') {
+                console.error('카카오 SDK가 로드되지 않았습니다.');
+                alert('카카오톡 공유 기능을 사용할 수 없습니다. 페이지를 새로고침 후 다시 시도해 주세요.');
+                return;
+            }
             
             if (!Kakao.isInitialized()) {
                 console.log('Kakao SDK가 초기화되지 않았습니다. 초기화를 시도합니다.');
@@ -748,10 +768,6 @@
                 alert('카카오톡 공유 중 오류가 발생했습니다: ' + e.message + '\n다시 시도해 주세요.');
             }
         }
-        
-        document.addEventListener("DOMContentLoaded", function() {
-            // ... existing code ...
-        });
     </script>
 </body>
 </html>
