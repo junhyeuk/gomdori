@@ -694,7 +694,7 @@
         });
         
         // 카카오 JavaScript 키
-        const kakaoJSKey = 'c089c8172def97eb00c07217cae17495';
+        const kakaoJSKey = '944f705c8d8ce4b8ae9653996836e1c3';
         
         // 개선된 카카오톡 공유 함수
         function shareToKakao() {
@@ -707,8 +707,8 @@
                 const description = encodeURIComponent('베어텐트에 초대합니다. 맛있는 안주와 함께 즐거운 시간 보내세요!');
                 const imageUrl = encodeURIComponent('https://gomdori-junhyeuks-projects.vercel.app/images/beartent_bg.jpeg');
                 
-                // 카카오톡 공유 URL 생성 - API 가이드에 맞게 수정
-                const kakaoShareUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=${kakaoJSKey}&validation=false&tab=kakaotalk&path=%2Flink&text=${title}%3A%20${description}&image=${imageUrl}&webUrl=${currentUrl}`;
+                // 카카오톡 공유 URL 생성 - 더 단순한 방식으로 변경
+                const kakaoShareUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=${kakaoJSKey}&meta={"title":"${title}","description":"${description}","image_url":"${imageUrl}","link_url":"${currentUrl}"}`;
                 
                 console.log('카카오톡 공유 URL:', kakaoShareUrl);
                 
