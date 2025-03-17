@@ -695,7 +695,7 @@
         // 카카오 SDK 관련 변수
         var kakaoSDKLoaded = false;
         var isLocalEnvironment = false;
-        // 카카오 JS 키 - 실제 앱 키로 변경 필요
+        // 카카오 JS 키 - 카카오 개발자 사이트에서 가져온 JavaScript 키
         var kakaoJSKey = 'c089c8172def97eb00c07217cae17495';
 
         // 현재 환경이 로컬 환경인지 확인
@@ -903,6 +903,10 @@
             try {
                 console.log('Kakao SDK 초기화 시도...');
                 
+                // 사용 중인 JS 키 출력 (디버깅 용도)
+                console.log('JavaScript 키:', kakaoJSKey);
+                console.log('현재 도메인:', window.location.hostname);
+                
                 // 이미 초기화되었는지 확인
                 if (!Kakao.isInitialized()) {
                     console.log('Kakao SDK 초기화 중... 키:', kakaoJSKey);
@@ -1005,8 +1009,8 @@
                         description: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
                         imageUrl: imageUrl,
                         link: {
-                            mobileWebUrl: currentUrl,
-                            webUrl: currentUrl
+                            webUrl: currentUrl,
+                            mobileWebUrl: currentUrl
                         }
                     },
                     // 버튼 정보
@@ -1014,11 +1018,16 @@
                         {
                             title: '초대장 보기',
                             link: {
-                                mobileWebUrl: currentUrl,
-                                webUrl: currentUrl
+                                webUrl: currentUrl,
+                                mobileWebUrl: currentUrl
                             }
                         }
-                    ]
+                    ],
+                    serverCallbackArgs: {
+                        // 서버 콜백 파라미터 추가
+                        param1: 'value1',
+                        param2: 'value2'
+                    }
                 });
                 console.log('카카오 공유 함수 호출 완료');
             } catch (e) {
@@ -1027,9 +1036,10 @@
                 // 오류 메시지 표시
                 if (e.message.includes('not defined') || e.message.includes('undefined')) {
                     alert('카카오톡 SDK 로드에 실패했습니다. 페이지를 새로고침 후 다시 시도해 주세요.');
-                } else if (e.message.includes('permission') || e.message.includes('4011')) {
-                    alert('카카오톡 공유 권한이 없습니다. 현재 도메인(' + window.location.hostname + ')이 카카오 개발자 사이트에 등록되어 있어야 합니다.\n카카오 개발자 사이트(https://developers.kakao.com)에서 현재 도메인을 등록해주세요.');
+                } else if (e.message.includes('permission') || e.message.includes('4011') || e.message.includes('4019')) {
+                    alert('카카오톡 공유 권한 오류가 발생했습니다.\n\n1. 카카오 개발자 사이트(https://developers.kakao.com)에서 현재 도메인(' + window.location.hostname + ')이 등록되어 있는지 확인하세요.\n2. 올바른 JavaScript 키를 사용 중인지 확인하세요.\n3. 웹 플랫폼이 설정되어 있는지 확인하세요.');
                     console.error('도메인 등록 방법: 카카오 개발자 사이트 > 내 애플리케이션 > 앱 설정 > 플랫폼 > Web 플랫폼 등록 > 사이트 도메인에 ' + window.location.hostname + ' 추가');
+                    console.error('현재 사용 중인 JavaScript 키:', kakaoJSKey);
                 } else {
                     alert('카카오톡 공유 중 오류가 발생했습니다: ' + e.message + '\n다시 시도해 주세요.');
                 }
