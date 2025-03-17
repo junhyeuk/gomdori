@@ -173,33 +173,42 @@
             background-color: #ffffff;
             color: #333;
             text-align: left;
-            padding: 15px;
+            padding: 20px;
             margin: 15px 0;
             border-radius: 10px;
             border: 1px solid #e6e6e6;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
         }
         
         .naver-header {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         
         .naver-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #333;
+            display: block;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .naver-rating-row {
             display: flex;
             align-items: center;
-            margin: 10px 0;
+            margin: 12px 0;
+            background-color: #f9f9f9;
+            padding: 8px 12px;
+            border-radius: 6px;
         }
         
         .naver-rating {
             color: #ff5757;
             font-weight: bold;
             margin-right: 15px;
+            font-size: 16px;
         }
         
         .naver-review {
@@ -209,23 +218,29 @@
         
         .naver-simple-links {
             display: flex;
+            flex-wrap: wrap;
             gap: 15px;
             margin: 15px 0;
-            padding: 8px 0;
+            padding: 12px 0;
             border-top: 1px solid #f0f0f0;
             border-bottom: 1px solid #f0f0f0;
+            justify-content: space-around;
         }
         
         .naver-link {
             color: #333;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
             cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
         }
         
         .naver-link:hover {
             color: #03c75a;
-            text-decoration: underline;
+            text-decoration: none;
+            background-color: #f5f5f5;
         }
         
         .info-section {
@@ -509,6 +524,167 @@
             margin-right: 8px;
             vertical-align: middle;
         }
+
+        /* 공유 모달 스타일 */
+        .share-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        .share-modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 0;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .share-modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .share-modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .close-modal {
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .share-modal-body {
+            padding: 20px;
+        }
+
+        .share-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .share-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-size: 12px;
+        }
+
+        .share-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-bottom: 8px;
+            background-size: 60%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .naver-icon {
+            background-color: #03c75a;
+            background-image: url('https://ssl.pstatic.net/static/common/favicon/favicon-192x192.png');
+            background-size: 70%;
+        }
+
+        .cafe-icon {
+            background-color: #2db400;
+            background-image: url('https://ssl.pstatic.net/static/cafe/cafe_pc/ico/ico_cafe.png');
+            background-size: 70%;
+        }
+
+        .keep-icon {
+            background-color: #fae100;
+            background-image: url('https://keep.naver.com/favicon.ico');
+            background-size: 70%;
+        }
+
+        .band-icon {
+            background-color: #3face4;
+            background-image: url('https://ssl.pstatic.net/cmstatic/band/wm/ico/favicon.ico');
+            background-size: 70%;
+        }
+
+        .line-icon {
+            background-color: #00c300;
+            background-image: url('https://line.me/favicon.ico');
+            background-size: 70%;
+        }
+
+        .x-icon {
+            background-color: #000;
+            background-image: url('https://abs.twimg.com/responsive-web/client-web/icon-svg.168b89d5.svg');
+            background-size: 50%;
+        }
+
+        .facebook-icon {
+            background-color: #1877f2;
+            background-image: url('https://static.xx.fbcdn.net/rsrc.php/yD/r/d4ZIVX-5C-b.ico');
+            background-size: 70%;
+        }
+
+        .kakao-icon {
+            background-color: #fee500;
+            background-image: url('https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png');
+            background-size: 70%;
+        }
+
+        .share-url-container {
+            display: flex;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #shareUrl {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .copy-url-btn {
+            background-color: #03c75a;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .copy-url-btn:hover {
+            background-color: #02b350;
+        }
     </style>
 </head>
 <body>
@@ -525,13 +701,12 @@
             </div>
             
             <div class="greeting">
-                안녕하십니까~~<br>
-                그동안 곰돌이포차를 아껴주신 모든 분들께 진심으로 감사드립니다.^^<br>
+                안녕하세요~~<br>
+                2025년을 맞이해 새로운 마음으로 곰돌이 포차를 시작합니다.<br>
                 여러분의 성원에 힘입어 더 넓고 쾌적한 공간으로 확장 이전하게 되었습니다.<br>
                 변함없는 손맛과 푸짐한 인심으로 여러분을 기다리겠습니다.<br>
                 오셔서 맛있는 음식과 정겨운 분위기를 함께 즐겨주세요.<br>
-                확장 이전 기념으로 푸짐한 오픈 이벤트도 준비되어 있으니<br>
-                많은 관심과 방문 부탁드립니다.
+                많은 관심과 방문 부탁드려요~
             </div>
             
             <div class="store-image-container">
@@ -540,25 +715,69 @@
             
             <div class="naver-search-result">
                 <div class="naver-header">
-                    <span class="naver-title">곰돌이포차 한식</span>
+                    <span class="naver-title">🍲 곰돌이포차 | 대구 북구 한식 맛집</span>
                 </div>
                 <div class="naver-rating-row">
-                    <span class="naver-rating">★ 4.64</span>
-                    <span class="naver-review">리뷰 33+</span>
+                    <span class="naver-rating">★ 4.64 / 5.0</span>
+                    <span class="naver-review">네이버 리뷰 33개+</span>
                 </div>
                 
                 <div class="naver-simple-links">
-                    <a href="https://naver.me/xdpQiNU7#reviewTab" class="naver-link" target="_blank">방문자 리뷰</a>
-                    <a href="https://search.naver.com/search.naver?query=곰돌이포차+대구+블로그" class="naver-link" target="_blank">블로그 리뷰</a>
-                    <a href="https://map.naver.com/p/directions/-/14314003.9086945,4282384.7259418,%EB%8C%80%EA%B5%AC%20%EB%B6%81%EA%B5%AC%20%EB%8C%80%ED%98%84%EB%82%A8%EB%A1%9C5%EA%B8%B8%204-1/-/transit?c=15.00,0,0,0,dh" class="naver-link" target="_blank">길찾기</a>
-                    <a href="javascript:void(0);" onclick="shareToKakao()" class="naver-link">카카오톡 공유</a>
-                    <a href="javascript:void(0);" onclick="shareContent()" class="naver-link">일반 공유</a>
+                    <a href="https://naver.me/xdpQiNU7#reviewTab" class="naver-link" target="_blank">💬 방문자 리뷰</a>
+                    <a href="https://search.naver.com/search.naver?query=곰돌이포차+대구+블로그" class="naver-link" target="_blank">📝 블로그 후기</a>
+                    <a href="https://map.naver.com/p/directions/-/14314003.9086945,4282384.7259418,%EB%8C%80%EA%B5%AC%20%EB%B6%81%EA%B5%AC%20%EB%8C%80%ED%98%84%EB%82%A8%EB%A1%9C5%EA%B8%B8%204-1/-/transit?c=15.00,0,0,0,dh" class="naver-link" target="_blank">🚗 길찾기</a>
+                    <a href="javascript:void(0);" onclick="openShareModal()" class="naver-link">🔗 공유</a>
                 </div>
             </div>
             
-            <!-- 추가: 카카오톡 직접 공유 버튼 -->
-            <div style="margin-top: 10px; text-align: center;">
-                <button id="kakao-share-btn" class="kakao-share-btn" onclick="shareToKakao()">카카오톡으로 공유하기</button>
+            <!-- 공유 모달 -->
+            <div id="shareModal" class="share-modal">
+                <div class="share-modal-content">
+                    <div class="share-modal-header">
+                        <h3>공유하기</h3>
+                        <span class="close-modal" onclick="closeShareModal()">&times;</span>
+                    </div>
+                    <div class="share-modal-body">
+                        <div class="share-buttons-grid">
+                            <a href="javascript:void(0);" onclick="shareToNaver()" class="share-button">
+                                <div class="share-icon naver-icon"></div>
+                                <span>블로그</span>
+                            </a>
+                            <a href="javascript:void(0);" onclick="shareToCafe()" class="share-button">
+                                <div class="share-icon cafe-icon"></div>
+                                <span>카페</span>
+                            </a>
+                            <a href="javascript:void(0);" onclick="shareToKeep()" class="share-button">
+                                <div class="share-icon keep-icon"></div>
+                                <span>Keep</span>
+                            </a>
+                            <a href="javascript:void(0);" onclick="shareToBand()" class="share-button">
+                                <div class="share-icon band-icon"></div>
+                                <span>밴드</span>
+                            </a>
+                            <a href="javascript:void(0);" onclick="shareToLine()" class="share-button">
+                                <div class="share-icon line-icon"></div>
+                                <span>LINE</span>
+                            </a>
+                            <a href="javascript:void(0);" onclick="shareToX()" class="share-button">
+                                <div class="share-icon x-icon"></div>
+                                <span>X</span>
+                            </a>
+                            <a href="javascript:void(0);" onclick="shareToFacebook()" class="share-button">
+                                <div class="share-icon facebook-icon"></div>
+                                <span>페이스북</span>
+                            </a>
+                            <a href="javascript:void(0);" onclick="shareToKakao()" class="share-button">
+                                <div class="share-icon kakao-icon"></div>
+                                <span>카카오톡</span>
+                            </a>
+                        </div>
+                        <div class="share-url-container">
+                            <input type="text" id="shareUrl" value="https://naver.me/xdpQiNU7" readonly>
+                            <button onclick="copyShareUrl()" class="copy-url-btn">복사</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="info-section">
@@ -752,98 +971,25 @@
             }
         }
         
-        // 카카오 SDK 초기화 함수
-        function initKakao() {
-            try {
-                if (typeof Kakao === 'undefined') {
-                    console.log('카카오 SDK가 아직 로드되지 않았습니다. 잠시 후 다시 시도합니다.');
-                    setTimeout(initKakao, 1000);
-                    return;
-                }
-                
-                if (!Kakao.isInitialized()) {
-                    console.log('카카오 SDK 초기화 시작');
-                    Kakao.init(kakaoJSKey);
-                    kakaoInitialized = Kakao.isInitialized();
-                    console.log("카카오 SDK 초기화 상태:", kakaoInitialized);
-                    
-                    if (kakaoInitialized) {
-                        console.log('카카오 SDK 초기화 성공!');
-                        console.log('JavaScript 키:', kakaoJSKey);
-                    } else {
-                        console.error('카카오 SDK 초기화 실패!');
-                    }
-                } else {
-                    kakaoInitialized = true;
-                    console.log('카카오 SDK가 이미 초기화되어 있습니다.');
-                }
-            } catch (error) {
-                console.error('카카오 SDK 초기화 중 오류 발생:', error);
-            }
-        }
-        
         // 여러 이벤트에서 초기화 시도
         document.addEventListener('DOMContentLoaded', function() {
             // DOM 로드 후 초기화 시도
-            setTimeout(initKakao, 500);
-            
-            // 모바일 기기 감지 - 더 정확한 검증
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            // iOS 기기 특별 감지
-            const isIOS = /iPhone|iPad|iPod/i.test(userAgent) && !window.MSStream;
-            // 안드로이드 감지
-            const isAndroid = /android/i.test(userAgent.toLowerCase());
-            // 일반적인 모바일 감지
-            const isMobile = isIOS || isAndroid || /Windows Phone|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-            // 카카오톡 앱 감지
-            const isApp = /KAKAOTALK/i.test(userAgent);
-            // PC 브라우저 모바일 모드 감지 (실제 모바일인지 검증)
-            const isPCwithMobileUA = isMobile && (/Win|Mac|Linux/i.test(userAgent) && !isIOS);
-            // 실제 모바일 기기 (PC의 모바일 모드 제외)
-            const isRealMobile = isMobile && !isPCwithMobileUA;
-            
-            console.log('사용자 에이전트:', userAgent);
-            console.log('iOS 기기:', isIOS);
-            console.log('안드로이드 기기:', isAndroid);
-            console.log('모바일 감지:', isMobile);
-            console.log('카카오톡 앱 감지:', isApp);
-            console.log('PC의 모바일 모드:', isPCwithMobileUA);
-            console.log('실제 모바일 기기:', isRealMobile);
-            
-            // 공유 버튼 변경
-            const shareBtn = document.getElementById('kakao-share-btn');
-            if (shareBtn) {
-                // 모든 환경에서 공유 버튼 텍스트를 공통으로 설정
-                shareBtn.textContent = '초대장 공유하기';
-                
-                // 기존 클릭 이벤트 제거 (onclick 속성으로 설정된 것도 제거)
-                shareBtn.removeAttribute('onclick');
-                
-                // 이벤트 리스너로 다시 설정
-                shareBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    // iOS 또는 안드로이드 실제 모바일 기기인 경우 카카오톡 SDK 방식 시도
-                    if (isRealMobile) {
-                        shareToKakao();
-                    } else {
-                        // PC나 모바일 웹 브라우저에서는 링크 복사
-                        copyAndShowMessage();
-                    }
-                });
-            }
+            setTimeout(function() {
+                initKakao();
+                setupKakaoShareButton();
+            }, 1000);
         });
         
         window.addEventListener('load', function() {
             // 페이지 완전 로드 후 한 번 더 초기화 시도
             if (!kakaoInitialized) {
                 initKakao();
+                setupKakaoShareButton();
             }
         });
-        
-        // 카카오톡 공유 함수
-        function shareToKakao() {
-            console.log('카카오톡 공유 시도...');
-            
+
+        // 카카오 공유 버튼 설정
+        function setupKakaoShareButton() {
             // 모바일 기기 감지 - 더 정확한 검증
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             // iOS 기기 특별 감지
@@ -866,48 +1012,29 @@
             console.log('카카오톡 앱 감지:', isApp);
             console.log('PC의 모바일 모드:', isPCwithMobileUA);
             console.log('실제 모바일 기기:', isRealMobile);
-            
-            // PC나 브라우저 모바일 모드에서 접속한 경우 링크 복사로 대체
-            if (!isRealMobile) {
-                console.log('PC 환경 감지, 링크 복사로 대체합니다.');
-                copyAndShowMessage();
+
+            if (!Kakao.isInitialized()) {
+                console.log('카카오 SDK 초기화 실패 상태에서 버튼 설정 시도');
                 return;
             }
+
+            const shareBtn = document.getElementById('kakao-share-btn');
+            if (!shareBtn) {
+                console.log('공유 버튼을 찾을 수 없습니다.');
+                return;
+            }
+
+            // 기존 이벤트 리스너 제거
+            const newShareBtn = shareBtn.cloneNode(true);
+            shareBtn.parentNode.replaceChild(newShareBtn, shareBtn);
             
-            // 여기서부터는 실제 모바일 환경에서만 실행
+            // 환경에 맞는 버튼 텍스트 설정
+            newShareBtn.textContent = isRealMobile ? '카카오톡으로 공유하기' : '카카오톡으로 공유하기 (PC)';
             
             try {
-                // 카카오 SDK가 로드되지 않았거나 초기화되지 않았다면 초기화
-                if (typeof Kakao === 'undefined') {
-                    console.error('카카오 SDK가 로드되지 않았습니다.');
-                    alert('카카오톡 공유 기능을 사용할 수 없습니다. 페이지를 새로고침 후 다시 시도해 주세요.');
-                    copyAndShowMessage(); // 에러시 대체 방법 제공
-                    return;
-                }
-                
-                if (!Kakao.isInitialized()) {
-                    console.log('Kakao SDK가 초기화되지 않았습니다. 초기화를 시도합니다.');
-                    Kakao.init(kakaoJSKey);
-                    kakaoInitialized = Kakao.isInitialized();
-                    
-                    if (!kakaoInitialized) {
-                        console.error('카카오 SDK 초기화 실패!');
-                        alert('카카오톡 공유 기능을 초기화할 수 없습니다. 잠시 후 다시 시도해 주세요.');
-                        copyAndShowMessage(); // 에러시 대체 방법 제공
-                        return;
-                    }
-                }
-                
-                // 현재 URL
+                // 현재 URL 및 이미지 설정
                 const currentUrl = window.location.href;
-                
-                // 이미지 URL - 절대 경로 사용
                 const imageUrl = 'https://gomdori-junhyeuks-projects.vercel.app/images/storebg.jpeg';
-                
-                // 현재 도메인과 API 키 정보 확인
-                console.log('현재 URL:', currentUrl);
-                console.log('카카오 JavaScript 키:', kakaoJSKey);
-                console.log('카카오 SDK 초기화 상태:', Kakao.isInitialized());
                 
                 // 공유 정보 구성
                 const shareObject = {
@@ -929,41 +1056,419 @@
                                 webUrl: currentUrl
                             }
                         }
-                    ],
-                    serverCallbackArgs: {
-                        source: "web"
-                    }
+                    ]
                 };
+
+                // PC 환경에서는 createDefaultButton 사용 (모든 환경에서 작동)
+                Kakao.Share.createDefaultButton({
+                    container: '#kakao-share-btn',
+                    objectType: 'feed',
+                    content: {
+                        title: '곰돌이포차 확장 이전 오픈 초대장',
+                        description: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
+                        imageUrl: imageUrl,
+                        link: {
+                            mobileWebUrl: currentUrl,
+                            webUrl: currentUrl
+                        }
+                    },
+                    buttons: [
+                        {
+                            title: '초대장 보기',
+                            link: {
+                                mobileWebUrl: currentUrl,
+                                webUrl: currentUrl
+                            }
+                        }
+                    ],
+                    fail: function(error) {
+                        console.error('카카오톡 공유 버튼 생성 실패:', error);
+                        
+                        // 실패시 일반 클릭 이벤트로 대체
+                        newShareBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            // 웹 공유 시도
+                            try {
+                                if (Kakao.isInitialized()) {
+                                    Kakao.Share.sendDefault(shareObject);
+                                } else {
+                                    throw new Error('카카오 SDK 초기화 실패');
+                                }
+                            } catch (err) {
+                                console.error('카카오톡 공유 실패:', err);
+                                copyAndShowMessage();
+                            }
+                        });
+                    }
+                });
                 
-                console.log('공유 객체:', shareObject);
+                console.log('카카오톡 공유 버튼 생성 완료');
                 
-                // 모바일 환경에서 공유 시도
-                if (isRealMobile) {
-                    // 모바일 앱은 Kakao.Share API 사용
-                    Kakao.Share.sendDefault(shareObject);
-                    console.log('카카오톡 공유 함수 호출 완료 (모바일)');
-                } else {
-                    // 혹시나 여기까지 오게 되면 (이중 체크) 링크 복사로 대체
-                    console.log('PC 환경 감지, 링크 복사로 대체합니다.');
-                    copyAndShowMessage();
+                // 안내 텍스트 추가
+                const existingNotice = newShareBtn.parentNode.querySelector('.kakao-share-notice');
+                if (!existingNotice) {
+                    const noticeDiv = document.createElement('div');
+                    noticeDiv.className = 'kakao-share-notice';
+                    noticeDiv.style.fontSize = '12px';
+                    noticeDiv.style.color = '#888';
+                    noticeDiv.style.marginTop = '5px';
+                    noticeDiv.style.textAlign = 'center';
+                    noticeDiv.textContent = isRealMobile ? 
+                        '카카오톡 앱으로 공유합니다 (앱 미설치 시 웹 브라우저 공유)' : 
+                        'PC에서는 카카오톡 웹으로 공유됩니다';
+                    newShareBtn.parentNode.appendChild(noticeDiv);
                 }
-            } catch (e) {
-                console.error('카카오톡 공유 실패:', e);
-                alert('카카오톡 공유 중 오류가 발생했습니다: ' + e.message + '\n대체 방식으로 링크를 복사합니다.');
+            } catch (error) {
+                console.error('카카오톡 공유 버튼 설정 실패:', error);
                 
-                // 링크 복사로 대체
-                copyToClipboard(window.location.href);
-                
-                // 토스트 메시지 표시
-                const toast = document.getElementById('toastMessage');
-                toast.textContent = '링크가 복사되었습니다!';
-                toast.style.display = 'block';
-                
-                setTimeout(() => {
-                    toast.style.display = 'none';
-                }, 3000);
+                // 오류 발생 시 기본 클릭 이벤트 등록
+                newShareBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (isRealMobile) {
+                        nativeShareToKakao();
+                    } else {
+                        copyAndShowMessage();
+                    }
+                });
             }
         }
+
+        // 네이티브 앱 공유 함수 (모바일용)
+        function nativeShareToKakao() {
+            console.log('네이티브 카카오톡 공유 시도...');
+            
+            try {
+                if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) {
+                    throw new Error('카카오 SDK가 초기화되지 않았습니다.');
+                }
+                
+                // 현재 URL 및 이미지 설정
+                const currentUrl = window.location.href;
+                const imageUrl = 'https://gomdori-junhyeuks-projects.vercel.app/images/storebg.jpeg';
+                
+                // 공유 정보 구성
+                const shareObject = {
+                    objectType: 'feed',
+                    content: {
+                        title: '곰돌이포차 확장 이전 오픈 초대장',
+                        description: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
+                        imageUrl: imageUrl,
+                        link: {
+                            mobileWebUrl: currentUrl,
+                            webUrl: currentUrl
+                        }
+                    },
+                    buttons: [
+                        {
+                            title: '초대장 보기',
+                            link: {
+                                mobileWebUrl: currentUrl,
+                                webUrl: currentUrl
+                            }
+                        }
+                    ]
+                };
+                
+                // 모바일에서 직접 공유 시도
+                Kakao.Share.sendDefault(shareObject);
+                console.log('네이티브 카카오톡 공유 요청 완료');
+            } catch (error) {
+                console.error('네이티브 카카오톡 공유 실패:', error);
+                alert('카카오톡 공유에 실패했습니다. 링크를 복사하여 직접 공유해주세요.');
+                copyAndShowMessage();
+            }
+        }
+        
+        // 카카오 SDK 초기화 함수
+        function initKakao() {
+            try {
+                console.log('카카오 SDK 초기화 시도...');
+                
+                if (typeof Kakao === 'undefined') {
+                    console.log('카카오 SDK가 아직 로드되지 않았습니다. 잠시 후 다시 시도합니다.');
+                    // SDK 로드를 위한 스크립트 다시 추가
+                    const kakaoScript = document.createElement('script');
+                    kakaoScript.src = 'https://developers.kakao.com/sdk/js/kakao.js';
+                    kakaoScript.async = true;
+                    kakaoScript.onload = function() {
+                        console.log('카카오 SDK 로드 완료, 초기화 시도');
+                        if (typeof Kakao !== 'undefined') {
+                            Kakao.init(kakaoJSKey);
+                            kakaoInitialized = Kakao.isInitialized();
+                            console.log('카카오 SDK 초기화 상태:', kakaoInitialized);
+                            if (kakaoInitialized) {
+                                setupKakaoShareButton();
+                            }
+                        }
+                    };
+                    document.head.appendChild(kakaoScript);
+                    return false;
+                }
+                
+                if (!Kakao.isInitialized()) {
+                    console.log('카카오 SDK 초기화 시작');
+                    Kakao.init(kakaoJSKey);
+                    kakaoInitialized = Kakao.isInitialized();
+                    console.log("카카오 SDK 초기화 상태:", kakaoInitialized);
+                    
+                    if (kakaoInitialized) {
+                        console.log('카카오 SDK 초기화 성공!');
+                        console.log('JavaScript 키:', kakaoJSKey);
+                        return true;
+                    } else {
+                        console.error('카카오 SDK 초기화 실패!');
+                        return false;
+                    }
+                } else {
+                    kakaoInitialized = true;
+                    console.log('카카오 SDK가 이미 초기화되어 있습니다.');
+                    return true;
+                }
+            } catch (error) {
+                console.error('카카오 SDK 초기화 중 오류 발생:', error);
+                return false;
+            }
+        }
+        
+        // 메뉴판 관련 스크립트
+        document.addEventListener('DOMContentLoaded', function() {
+            // 메뉴 자세히 보기 버튼 기능
+            const viewMoreBtn = document.querySelector('.view-more-btn');
+            const menuPreview = document.querySelector('.menu-preview');
+            const menuOverlay = document.querySelector('.menu-overlay');
+            let isExpanded = false;
+            
+            if (viewMoreBtn) {
+                viewMoreBtn.addEventListener('click', function() {
+                    isExpanded = !isExpanded;
+                    
+                    if (isExpanded) {
+                        // 메뉴 펼치기
+                        menuPreview.classList.add('expanded');
+                        menuOverlay.classList.add('hidden');
+                        viewMoreBtn.textContent = '메뉴 접기';
+                    } else {
+                        // 메뉴 접기
+                        menuPreview.classList.remove('expanded');
+                        menuOverlay.classList.remove('hidden');
+                        viewMoreBtn.textContent = '메뉴 자세히 보기';
+                    }
+                });
+            }
+            
+            // 공유 URL 설정
+            const shareUrlInput = document.getElementById('shareUrl');
+            if (shareUrlInput) {
+                shareUrlInput.value = window.location.href;
+            }
+            
+            // 카테고리별 접기/펼치기 기능
+            const categoryHeaders = document.querySelectorAll('.menu-board h4');
+            
+            categoryHeaders.forEach(header => {
+                // 초기 상태 설정 (펼쳐진 상태)
+                const categoryList = header.nextElementSibling;
+                
+                // 헤더에 클릭 이벤트 추가
+                header.addEventListener('click', function() {
+                    // 헤더의 상태 토글
+                    this.classList.toggle('collapsed');
+                    
+                    // 해당 카테고리 메뉴 리스트 토글
+                    const categoryList = this.nextElementSibling;
+                    categoryList.classList.toggle('collapsed');
+                });
+            });
+            
+            // 전체 메뉴 접기/펼치기 버튼 추가
+            const menuBoard = document.querySelector('.menu-board');
+            if (menuBoard) {
+                // 전체 메뉴 제어 버튼 컨테이너 생성
+                const controlsContainer = document.createElement('div');
+                controlsContainer.className = 'menu-controls';
+                controlsContainer.style.textAlign = 'center';
+                controlsContainer.style.marginBottom = '15px';
+                
+                // 전체 펼치기 버튼
+                const expandAllBtn = document.createElement('button');
+                expandAllBtn.textContent = '전체 펼치기';
+                expandAllBtn.className = 'category-toggle';
+                expandAllBtn.style.marginRight = '15px';
+                expandAllBtn.style.padding = '5px 10px';
+                expandAllBtn.style.backgroundColor = '#e74c3c';
+                expandAllBtn.style.color = 'white';
+                expandAllBtn.style.border = 'none';
+                expandAllBtn.style.borderRadius = '4px';
+                
+                // 전체 접기 버튼
+                const collapseAllBtn = document.createElement('button');
+                collapseAllBtn.textContent = '전체 접기';
+                collapseAllBtn.className = 'category-toggle';
+                collapseAllBtn.style.padding = '5px 10px';
+                collapseAllBtn.style.backgroundColor = '#e74c3c';
+                collapseAllBtn.style.color = 'white';
+                collapseAllBtn.style.border = 'none';
+                collapseAllBtn.style.borderRadius = '4px';
+                
+                // 버튼을 컨테이너에 추가
+                controlsContainer.appendChild(expandAllBtn);
+                controlsContainer.appendChild(collapseAllBtn);
+                
+                // 컨테이너를 메뉴판 제목 바로 뒤에 추가
+                const menuTitle = menuBoard.querySelector('h3');
+                menuTitle.after(controlsContainer);
+                
+                // 전체 펼치기 버튼 이벤트
+                expandAllBtn.addEventListener('click', function() {
+                    categoryHeaders.forEach(header => {
+                        header.classList.remove('collapsed');
+                        const categoryList = header.nextElementSibling;
+                        categoryList.classList.remove('collapsed');
+                    });
+                    
+                    // 메뉴 프리뷰도 펼치기
+                    menuPreview.classList.add('expanded');
+                    menuOverlay.classList.add('hidden');
+                    viewMoreBtn.textContent = '메뉴 접기';
+                    isExpanded = true;
+                });
+                
+                // 전체 접기 버튼 이벤트
+                collapseAllBtn.addEventListener('click', function() {
+                    categoryHeaders.forEach(header => {
+                        header.classList.add('collapsed');
+                        const categoryList = header.nextElementSibling;
+                        categoryList.classList.add('collapsed');
+                    });
+                    
+                    // 메뉴 프리뷰도 접기
+                    menuPreview.classList.remove('expanded');
+                    menuOverlay.classList.remove('hidden');
+                    viewMoreBtn.textContent = '메뉴 자세히 보기';
+                    isExpanded = false;
+                });
+            }
+            
+            // 페이지 로드 시 카테고리 초기 상태 설정
+            setTimeout(function() {
+                // 기본적으로 모든 카테고리 펼쳐진 상태로 시작
+                categoryHeaders.forEach(header => {
+                    // 필요한 경우 여기서 특정 카테고리만 접힌 상태로 설정할 수 있음
+                    // 예: header.classList.add('collapsed'); 
+                    // categoryList.classList.add('collapsed');
+                });
+            }, 100);
+        });
+
+        // 공유 모달 관련 함수
+        function openShareModal() {
+            const modal = document.getElementById('shareModal');
+            if (modal) {
+                modal.style.display = 'block';
+                
+                // URL 업데이트
+                const shareUrlInput = document.getElementById('shareUrl');
+                if (shareUrlInput) {
+                    shareUrlInput.value = window.location.href;
+                }
+                
+                // 모달 외부 클릭 시 닫기
+                window.onclick = function(event) {
+                    if (event.target === modal) {
+                        closeShareModal();
+                    }
+                };
+            }
+        }
+        
+        function closeShareModal() {
+            const modal = document.getElementById('shareModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        function copyShareUrl() {
+            const shareUrlInput = document.getElementById('shareUrl');
+            if (shareUrlInput) {
+                shareUrlInput.select();
+                shareUrlInput.setSelectionRange(0, 99999); // 모바일 지원
+                
+                try {
+                    // 클립보드에 복사
+                    navigator.clipboard.writeText(shareUrlInput.value)
+                        .then(() => {
+                            alert('링크가 복사되었습니다.');
+                        })
+                        .catch(err => {
+                            console.error('클립보드 복사 실패:', err);
+                            // 대체 방법 시도
+                            document.execCommand('copy');
+                            alert('링크가 복사되었습니다.');
+                        });
+                } catch (err) {
+                    console.error('클립보드 복사 실패:', err);
+                    // 레거시 방법 시도
+                    document.execCommand('copy');
+                    alert('링크가 복사되었습니다.');
+                }
+            }
+        }
+        
+        // 각 소셜 미디어 공유 함수
+        function shareToNaver() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent('곰돌이포차 확장 이전 오픈 초대장');
+            window.open(`https://blog.naver.com/openapi/share?url=${url}&title=${title}`, '_blank');
+        }
+        
+        function shareToCafe() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent('곰돌이포차 확장 이전 오픈 초대장');
+            window.open(`https://cafe.naver.com/openapi/cafes/share?url=${url}&title=${title}`, '_blank');
+        }
+        
+        function shareToKeep() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent('곰돌이포차 확장 이전 오픈 초대장');
+            window.open(`https://keep.naver.com/share?url=${url}&title=${title}`, '_blank');
+        }
+        
+        function shareToBand() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent('곰돌이포차 확장 이전 오픈 초대장');
+            window.open(`https://band.us/plugin/share?body=${title}&route=${url}`, '_blank');
+        }
+        
+        function shareToLine() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://social-plugins.line.me/lineit/share?url=${url}`, '_blank');
+        }
+        
+        function shareToX() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('곰돌이포차 확장 이전 오픈 초대장');
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        }
+        
+        function shareToFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+        }
+        
+        // 전역 함수로 등록
+        window.openShareModal = openShareModal;
+        window.closeShareModal = closeShareModal;
+        window.copyShareUrl = copyShareUrl;
+        window.shareToNaver = shareToNaver;
+        window.shareToCafe = shareToCafe;
+        window.shareToKeep = shareToKeep;
+        window.shareToBand = shareToBand;
+        window.shareToLine = shareToLine;
+        window.shareToX = shareToX;
+        window.shareToFacebook = shareToFacebook;
+        window.shareToKakao = shareToKakao;
+        window.shareContent = shareContent;
     </script>
 </body>
 </html>
