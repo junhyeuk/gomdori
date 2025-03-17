@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>곰돌이포차 확장 이전 오픈 초대장</title>
     <!-- 폰트 파일 미리 로드 -->
-    <link rel="preload" href="BMEULJIROTTF.ttf" as="font" type="font/ttf" crossorigin>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- 카카오 SDK 추가 -->
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" 
-      crossorigin="anonymous"></script>
+    <link rel="preload" href="../BMEULJIROTTF.ttf" as="font" type="font/ttf" crossorigin>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
     <style>
         /* 을지로체 폰트 적용 */
         @font-face {
             font-family: 'BMEuljiro';
-            src: url('BMEULJIROTTF.ttf') format('truetype');
+            src: url('../BMEULJIROTTF.ttf') format('truetype');
             font-weight: normal;
             font-style: normal;
             font-display: swap;
@@ -557,9 +556,11 @@
                 </div>
             </div>
             
-            <!-- 추가: 카카오톡 직접 공유 버튼 -->
+            <!-- 카카오 공유 버튼 -->
             <div style="margin-top: 10px; text-align: center;">
-                <button id="kakao-share-btn" class="kakao-share-btn" onclick="shareToKakao()">카카오톡으로 공유하기</button>
+                <button id="kakao-share-btn" class="kakao-share-btn" onclick="shareToKakao()">
+                    초대장 카카오톡으로 공유하기
+                </button>
             </div>
             
             <div class="info-section">
@@ -692,357 +693,31 @@
             console.log('BMEuljiro font has been loaded');
         });
         
-        // 카카오 SDK 관련 변수
-        var kakaoSDKLoaded = false;
-        var isLocalEnvironment = false;
-        // 카카오 JS 키 - 카카오 개발자 사이트에서 가져온 JavaScript 키
-        var kakaoJSKey = 'c089c8172def97eb00c07217cae17495';
-
-        // 현재 환경이 로컬 환경인지 확인
-        function checkIfLocalEnvironment() {
-            const hostname = window.location.hostname;
-            return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '' || hostname.startsWith('192.168.') || hostname.startsWith('10.');
-        }
-
-        // 페이지 로드 완료 후 SDK 초기화 (window.onload는 모든 리소스가 로드된 후 실행됨)
-        window.onload = function() {
-            console.log('페이지 완전히 로드됨');
-            
-            // 로컬 환경 확인
-            isLocalEnvironment = checkIfLocalEnvironment();
-            console.log('로컬 환경 여부:', isLocalEnvironment);
-            
-            // 카카오 SDK 초기화 시도 (onload에서 한 번 더 시도)
-            setTimeout(function() {
-                initializeKakaoSDK();
-            }, 500);
-        };
-
-        // DOM이 완전히 로드된 후 카카오 SDK 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            // 로컬 환경 확인
-            isLocalEnvironment = checkIfLocalEnvironment();
-            console.log('로컬 환경 여부:', isLocalEnvironment);
-            
-            // 카카오 SDK 초기화 시도
-            initializeKakaoSDK();
-            
-            // 나머지 DOMContentLoaded 이벤트 핸들러...
-            
-            // 폰트 로딩을 강제로 트리거
-            const fontLoader = new FontFace('BMEuljiro', 'url(BMEULJIROTTF.ttf)');
-            fontLoader.load().then(function(loaded_face) {
-                document.fonts.add(loaded_face);
-                document.body.style.fontFamily = '"BMEuljiro", sans-serif';
-                console.log('Font loaded via JavaScript');
-            }).catch(function(error) {
-                console.log('Font loading failed: ' + error);
-            });
-            
-            // 메뉴판 자세히 보기 기능
-            const menuPreview = document.querySelector('.menu-preview');
-            const menuOverlay = document.querySelector('.menu-overlay');
-            const viewMoreBtn = document.querySelector('.view-more-btn');
-            const menuContent = document.querySelector('.menu-content');
-            
-            if (viewMoreBtn) {
-                viewMoreBtn.addEventListener('click', function() {
-                    menuPreview.classList.toggle('expanded');
-                    menuOverlay.classList.toggle('hidden');
-                    
-                    if (menuPreview.classList.contains('expanded')) {
-                        viewMoreBtn.textContent = '메뉴 접기';
-                    } else {
-                        viewMoreBtn.textContent = '메뉴 자세히 보기';
-                    }
-                });
-            }
-            
-            // 메뉴 카테고리 토글 기능
-            const categoryHeaders = document.querySelectorAll('.menu-board h4');
-            
-            // 첫 두 개 카테고리만 보이고 나머지는 접기 (초기 상태)
-            categoryHeaders.forEach((header, index) => {
-                if (index > 1) {
-                    header.classList.add('collapsed');
-                    const nextUl = header.nextElementSibling;
-                    if (nextUl && nextUl.tagName === 'UL') {
-                        nextUl.classList.add('collapsed');
-                    }
-                }
-                
-                header.addEventListener('click', function(e) {
-                    // 이벤트 버블링 방지
-                    e.stopPropagation();
-                    
-                    this.classList.toggle('collapsed');
-                    const nextUl = this.nextElementSibling;
-                    if (nextUl && nextUl.tagName === 'UL') {
-                        nextUl.classList.toggle('collapsed');
-                    }
-                    
-                    // 모든 카테고리가 접혀있는지 또는 펼쳐있는지 확인하여 버튼 텍스트 업데이트
-                    updateExpandButtonText();
-                });
-            });
-            
-            // 모든 카테고리 접기/펼치기 버튼 추가
-            const menuTitle = document.querySelector('.menu-board h3');
-            const expandAllBtn = document.createElement('button');
-            expandAllBtn.textContent = '전체 펼치기';
-            expandAllBtn.className = 'category-toggle';
-            expandAllBtn.style.marginLeft = '10px';
-            menuTitle.appendChild(expandAllBtn);
-            
-            // 현재 펼쳐진 상태인지 확인하는 함수
-            function areAllCategoriesExpanded() {
-                let expanded = true;
-                categoryHeaders.forEach(header => {
-                    if (header.classList.contains('collapsed')) {
-                        expanded = false;
-                    }
-                });
-                return expanded;
-            }
-            
-            // 현재 접힌 상태인지 확인하는 함수
-            function areAllCategoriesCollapsed() {
-                let collapsed = true;
-                categoryHeaders.forEach(header => {
-                    if (!header.classList.contains('collapsed')) {
-                        collapsed = false;
-                    }
-                });
-                return collapsed;
-            }
-            
-            // 버튼 텍스트 업데이트 함수
-            function updateExpandButtonText() {
-                if (areAllCategoriesExpanded()) {
-                    expandAllBtn.textContent = '전체 접기';
-                } else {
-                    expandAllBtn.textContent = '전체 펼치기';
-                }
-            }
-            
-            // 모든 카테고리 접기/펼치기 처리
-            expandAllBtn.addEventListener('click', function(e) {
-                // 이벤트 버블링 방지
-                e.stopPropagation();
-                
-                const shouldExpand = !areAllCategoriesExpanded();
-                
-                categoryHeaders.forEach(header => {
-                    const nextUl = header.nextElementSibling;
-                    if (shouldExpand) {
-                        // 펼치기
-                        header.classList.remove('collapsed');
-                        if (nextUl && nextUl.tagName === 'UL') {
-                            nextUl.classList.remove('collapsed');
-                        }
-                    } else {
-                        // 접기
-                        header.classList.add('collapsed');
-                        if (nextUl && nextUl.tagName === 'UL') {
-                            nextUl.classList.add('collapsed');
-                        }
-                    }
-                });
-                
-                // 첫 두 개 카테고리는 항상 펼침 옵션을 제거하여 전체 접기가 제대로 작동하도록 함
-                // for (let i = 0; i < Math.min(2, categoryHeaders.length); i++) {
-                //     categoryHeaders[i].classList.remove('collapsed');
-                //     const nextUl = categoryHeaders[i].nextElementSibling;
-                //     if (nextUl && nextUl.tagName === 'UL') {
-                //         nextUl.classList.remove('collapsed');
-                //     }
-                // }
-                
-                expandAllBtn.textContent = shouldExpand ? '전체 접기' : '전체 펼치기';
-                
-                // 메뉴판이 접혀있는 상태에서 전체 펼치기를 누르면 메뉴판도 자동으로 펼치기
-                if (shouldExpand && !menuPreview.classList.contains('expanded')) {
-                    menuPreview.classList.add('expanded');
-                    menuOverlay.classList.add('hidden');
-                    viewMoreBtn.textContent = '메뉴 접기';
-                }
-            });
-        });
-        
-        // 카카오 SDK 초기화 함수 - 독립 함수로 분리
-        function initializeKakaoSDK() {
-            if (typeof Kakao === 'undefined') {
-                console.error('Kakao SDK를 불러올 수 없습니다. 인터넷 연결을 확인해주세요.');
-                
-                // 스크립트 다시 로드 시도
-                const existingScript = document.querySelector('script[src*="kakao_js_sdk"]');
-                if (existingScript) {
-                    existingScript.remove();
-                }
-                
-                // 새 스크립트 로드
-                const script = document.createElement('script');
-                script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js';
-                script.crossOrigin = 'anonymous';
-                script.onload = function() {
-                    console.log('Kakao 스크립트 다시 로드 성공');
-                    setTimeout(function() {
-                        initKakaoWithKey();
-                    }, 100);
-                };
-                document.head.appendChild(script);
-                
-                return false;
-            }
-            
-            return initKakaoWithKey();
-        }
-        
-        // 카카오 키로 초기화하는 함수
-        function initKakaoWithKey() {
-            try {
-                console.log('Kakao SDK 초기화 시도...');
-                
-                // 사용 중인 JS 키 출력 (디버깅 용도)
-                console.log('JavaScript 키:', kakaoJSKey);
-                console.log('현재 도메인:', window.location.hostname);
-                
-                // 이미 초기화되었는지 확인
-                if (!Kakao.isInitialized()) {
-                    console.log('Kakao SDK 초기화 중... 키:', kakaoJSKey);
-                    Kakao.init(kakaoJSKey);
-                    console.log('Kakao SDK 초기화 완료!');
-                } else {
-                    console.log('Kakao SDK 이미 초기화되어 있음');
-                }
-                
-                kakaoSDKLoaded = Kakao.isInitialized();
-                console.log('Kakao SDK 초기화 상태:', kakaoSDKLoaded);
-                
-                // 초기화 성공 시 버튼 활성화
-                if (kakaoSDKLoaded) {
-                    const shareBtn = document.getElementById('kakao-share-btn');
-                    if (shareBtn) {
-                        shareBtn.disabled = false;
-                    }
-                }
-                
-                return kakaoSDKLoaded;
-            } catch (e) {
-                console.error('Kakao SDK 초기화 실패:', e);
-                return false;
-            }
-        }
+        // 카카오 JavaScript 키
+        const kakaoJSKey = 'c089c8172def97eb00c07217cae17495';
         
         // 개선된 카카오톡 공유 함수
         function shareToKakao() {
             console.log('카카오톡 공유 시도...');
             
-            // 브라우저 콘솔 열기 요청
-            if (isLocalEnvironment) {
-                console.log('%c디버깅을 위해 개발자 도구의 콘솔을 확인해주세요!', 'background: #FEE500; color: #000; font-size: 16px; padding: 5px;');
-            }
-            
-            // SDK가 로드되지 않았다면 초기화 재시도
-            if (!kakaoSDKLoaded || typeof Kakao === 'undefined') {
-                console.log('카카오 SDK가 초기화되지 않았습니다. 재시도합니다.');
-                
-                // 스크립트 다시 로드 시도
-                if (typeof Kakao === 'undefined') {
-                    console.log('Kakao 객체가 없습니다. 스크립트를 다시 로드합니다.');
-                    
-                    // 기존 스크립트 제거
-                    const existingScript = document.querySelector('script[src*="kakao_js_sdk"]');
-                    if (existingScript) {
-                        existingScript.remove();
-                    }
-                    
-                    // 새 스크립트 로드
-                    const script = document.createElement('script');
-                    script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js';
-                    script.crossOrigin = 'anonymous';
-                    script.onload = function() {
-                        console.log('Kakao 스크립트 다시 로드 성공');
-                        kakaoSDKLoaded = initKakaoWithKey();
-                        if (kakaoSDKLoaded) {
-                            console.log('초기화 성공 후 공유 재시도');
-                            setTimeout(function() {
-                                shareToKakao();
-                            }, 100);
-                        }
-                    };
-                    document.head.appendChild(script);
-                    return;
-                }
-                
-                kakaoSDKLoaded = initKakaoWithKey();
-                
-                // 여전히 초기화되지 않았다면 오류 메시지 표시
-                if (!kakaoSDKLoaded) {
-                    alert('카카오톡 공유 기능을 사용할 수 없습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.\n(F12를 눌러 콘솔을 확인해주세요)');
-                    return;
-                }
-            }
-            
             try {
-                // 현재 URL로부터 절대 URL 생성
-                const currentUrl = window.location.href;
-                // 도메인에 상관없이 사용할 수 있는 이미지 URL (절대 경로 사용)
-                const imageUrl = 'https://gomdori-junhyeuks-projects.vercel.app/images/storebg.jpeg';
+                // URL 기반 공유 방식으로 변경 (SDK 초기화 없이도 작동)
+                const currentUrl = encodeURIComponent(window.location.href);
+                const title = encodeURIComponent('곰도리포차 베어텐트 초대장');
+                const description = encodeURIComponent('베어텐트에 초대합니다. 맛있는 안주와 함께 즐거운 시간 보내세요!');
+                const imageUrl = encodeURIComponent('https://gomdori-junhyeuks-projects.vercel.app/images/beartent_bg.jpeg');
                 
-                console.log('공유 URL:', currentUrl);
-                console.log('이미지 URL:', imageUrl);
+                // 카카오톡 공유 URL 생성
+                const kakaoShareUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=${kakaoJSKey}&ka=sdk%2F1.43.0%20os%2Fjavascript&url=${currentUrl}&text=${title}%3A%20${description}`;
                 
-                console.log('Kakao SDK 상태:', kakaoSDKLoaded ? '초기화됨' : '초기화되지 않음');
-                console.log('Kakao.Share 객체 존재 여부:', typeof Kakao.Share !== 'undefined' ? '존재함' : '존재하지 않음');
+                console.log('카카오톡 공유 URL:', kakaoShareUrl);
                 
-                // 도메인 알림 추가
-                const hostname = window.location.hostname;
-                console.log('현재 도메인:', hostname);
-                console.log('주의: 이 도메인이 카카오 개발자 사이트에 등록되어 있어야 합니다.');
-
-                // 공유 데이터 설정 - 최신 API 문서 기준으로 수정
-                Kakao.Share.sendDefault({
-                    objectType: 'feed',
-                    content: {
-                        title: '곰돌이포차 확장 이전 오픈 초대장',
-                        description: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
-                        imageUrl: imageUrl,
-                        link: {
-                            webUrl: currentUrl,
-                            mobileWebUrl: currentUrl
-                        }
-                    },
-                    // 버튼 정보
-                    buttons: [
-                        {
-                            title: '초대장 보기',
-                            link: {
-                                webUrl: currentUrl,
-                                mobileWebUrl: currentUrl
-                            }
-                        }
-                    ],
-                    serverCallbackArgs: {
-                        // 서버 콜백 파라미터 추가
-                        param1: 'value1',
-                        param2: 'value2'
-                    }
-                });
-                console.log('카카오 공유 함수 호출 완료');
+                // 새 창에서 카카오톡 공유 페이지 열기
+                window.open(kakaoShareUrl, '_blank', 'width=600,height=800');
+                console.log('카카오 공유 창 열기 완료');
             } catch (e) {
                 console.error('카카오톡 공유 실패:', e);
-                
-                // 오류 메시지 표시
-                if (e.message.includes('not defined') || e.message.includes('undefined')) {
-                    alert('카카오톡 SDK 로드에 실패했습니다. 페이지를 새로고침 후 다시 시도해 주세요.');
-                } else if (e.message.includes('permission') || e.message.includes('4011') || e.message.includes('4019')) {
-                    alert('카카오톡 공유 권한 오류가 발생했습니다.\n\n1. 카카오 개발자 사이트(https://developers.kakao.com)에서 현재 도메인(' + window.location.hostname + ')이 등록되어 있는지 확인하세요.\n2. 올바른 JavaScript 키를 사용 중인지 확인하세요.\n3. 웹 플랫폼이 설정되어 있는지 확인하세요.');
-                    console.error('도메인 등록 방법: 카카오 개발자 사이트 > 내 애플리케이션 > 앱 설정 > 플랫폼 > Web 플랫폼 등록 > 사이트 도메인에 ' + window.location.hostname + ' 추가');
-                    console.error('현재 사용 중인 JavaScript 키:', kakaoJSKey);
-                } else {
-                    alert('카카오톡 공유 중 오류가 발생했습니다: ' + e.message + '\n다시 시도해 주세요.');
-                }
+                alert('카카오톡 공유 중 오류가 발생했습니다: ' + e.message + '\n다시 시도해 주세요.');
             }
         }
         
