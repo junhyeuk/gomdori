@@ -10,7 +10,7 @@
     <!-- 카카오 SDK 추가 -->
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" 
       integrity="sha384-l+xbElFSnPZ2rOQ+gcV2XkwWHtXezW5lfsB5It8wyPXQcI5WAqCQXqxn3KrRXWdN" 
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous" defer></script>
     <style>
         /* 을지로체 폰트 적용 */
         @font-face {
@@ -693,6 +693,20 @@
             return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '' || hostname.startsWith('192.168.') || hostname.startsWith('10.');
         }
 
+        // 페이지 로드 완료 후 SDK 초기화 (window.onload는 모든 리소스가 로드된 후 실행됨)
+        window.onload = function() {
+            console.log('페이지 완전히 로드됨');
+            
+            // 로컬 환경 확인
+            isLocalEnvironment = checkIfLocalEnvironment();
+            console.log('로컬 환경 여부:', isLocalEnvironment);
+            
+            // 카카오 SDK 초기화 시도 (onload에서 한 번 더 시도)
+            setTimeout(function() {
+                initializeKakaoSDK();
+            }, 500);
+        };
+
         // DOM이 완전히 로드된 후 카카오 SDK 초기화
         document.addEventListener('DOMContentLoaded', function() {
             // 로컬 환경 확인
@@ -852,9 +866,15 @@
             }
             
             try {
+                console.log('Kakao SDK 초기화 시도...');
+                
                 // 이미 초기화되었는지 확인
                 if (!Kakao.isInitialized()) {
+                    console.log('Kakao SDK 초기화 중... 키:', kakaoJSKey);
                     Kakao.init(kakaoJSKey);
+                    console.log('Kakao SDK 초기화 완료!');
+                } else {
+                    console.log('Kakao SDK 이미 초기화되어 있음');
                 }
                 
                 kakaoSDKLoaded = Kakao.isInitialized();
@@ -879,20 +899,47 @@
         function shareToKakao() {
             console.log('카카오톡 공유 시도...');
             
-            // 로컬 환경에서는 테스트용 응답 제공
+            // 브라우저 콘솔 열기 요청
             if (isLocalEnvironment) {
-                console.log('로컬 환경에서 테스트 중입니다.');
-                // 로컬 테스트에서도 계속 진행 (테스트 목적)
+                console.log('%c디버깅을 위해 개발자 도구의 콘솔을 확인해주세요!', 'background: #FEE500; color: #000; font-size: 16px; padding: 5px;');
             }
             
             // SDK가 로드되지 않았다면 초기화 재시도
-            if (!kakaoSDKLoaded) {
+            if (!kakaoSDKLoaded || typeof Kakao === 'undefined') {
                 console.log('카카오 SDK가 초기화되지 않았습니다. 재시도합니다.');
+                
+                // 스크립트 다시 로드 시도
+                if (typeof Kakao === 'undefined') {
+                    console.log('Kakao 객체가 없습니다. 스크립트를 다시 로드합니다.');
+                    
+                    // 기존 스크립트 제거
+                    const existingScript = document.querySelector('script[src*="kakao_js_sdk"]');
+                    if (existingScript) {
+                        existingScript.remove();
+                    }
+                    
+                    // 새 스크립트 로드
+                    const script = document.createElement('script');
+                    script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js';
+                    script.integrity = 'sha384-l+xbElFSnPZ2rOQ+gcV2XkwWHtXezW5lfsB5It8wyPXQcI5WAqCQXqxn3KrRXWdN';
+                    script.crossOrigin = 'anonymous';
+                    script.onload = function() {
+                        console.log('Kakao 스크립트 다시 로드 성공');
+                        kakaoSDKLoaded = initializeKakaoSDK();
+                        if (kakaoSDKLoaded) {
+                            console.log('초기화 성공 후 공유 재시도');
+                            shareToKakao();
+                        }
+                    };
+                    document.head.appendChild(script);
+                    return;
+                }
+                
                 kakaoSDKLoaded = initializeKakaoSDK();
                 
                 // 여전히 초기화되지 않았다면 오류 메시지 표시
                 if (!kakaoSDKLoaded) {
-                    alert('카카오톡 공유 기능을 사용할 수 없습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.');
+                    alert('카카오톡 공유 기능을 사용할 수 없습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.\n(F12를 눌러 콘솔을 확인해주세요)');
                     return;
                 }
             }
@@ -905,6 +952,9 @@
                 
                 console.log('공유 URL:', currentUrl);
                 console.log('이미지 URL:', imageUrl);
+                
+                console.log('Kakao SDK 상태:', kakaoSDKLoaded ? '초기화됨' : '초기화되지 않음');
+                console.log('Kakao.Share 객체 존재 여부:', typeof Kakao.Share !== 'undefined' ? '존재함' : '존재하지 않음');
                 
                 // 공유 데이터 설정
                 Kakao.Share.sendDefault({
@@ -939,9 +989,9 @@
                 if (e.message.includes('not defined') || e.message.includes('undefined')) {
                     alert('카카오톡 SDK 로드에 실패했습니다. 페이지를 새로고침 후 다시 시도해 주세요.');
                 } else if (e.message.includes('permission')) {
-                    alert('카카오톡 공유 권한이 없습니다. 도메인 등록이 필요할 수 있습니다.');
+                    alert('카카오톡 공유 권한이 없습니다. 도메인 등록이 필요할 수 있습니다.\n카카오 개발자 사이트에서 현재 도메인이 등록되어 있는지 확인해주세요.');
                 } else {
-                    alert('카카오톡 공유 중 오류가 발생했습니다. 다시 시도해 주세요.');
+                    alert('카카오톡 공유 중 오류가 발생했습니다: ' + e.message + '\n다시 시도해 주세요.');
                 }
             }
         }
