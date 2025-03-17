@@ -706,8 +706,8 @@
                 const description = encodeURIComponent('2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.');
                 const imageUrl = encodeURIComponent('https://gomdori-junhyeuks-projects.vercel.app/images/storebg.jpeg');
                 
-                // 카카오톡 공유 URL 생성
-                const kakaoShareUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=${kakaoJSKey}&ka=sdk%2F1.43.0%20os%2Fjavascript&url=${currentUrl}&text=${title}%3A%20${description}`;
+                // 카카오톡 공유 URL 생성 - API 가이드에 맞게 수정
+                const kakaoShareUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=${kakaoJSKey}&validation=false&tab=kakaotalk&path=%2Flink&text=${title}%3A%20${description}&image=${imageUrl}&webUrl=${currentUrl}`;
                 
                 console.log('카카오톡 공유 URL:', kakaoShareUrl);
                 

@@ -707,8 +707,8 @@
                 const description = encodeURIComponent('베어텐트에 초대합니다. 맛있는 안주와 함께 즐거운 시간 보내세요!');
                 const imageUrl = encodeURIComponent('https://gomdori-junhyeuks-projects.vercel.app/images/beartent_bg.jpeg');
                 
-                // 카카오톡 공유 URL 생성
-                const kakaoShareUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=${kakaoJSKey}&ka=sdk%2F1.43.0%20os%2Fjavascript&url=${currentUrl}&text=${title}%3A%20${description}`;
+                // 카카오톡 공유 URL 생성 - API 가이드에 맞게 수정
+                const kakaoShareUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=${kakaoJSKey}&validation=false&tab=kakaotalk&path=%2Flink&text=${title}%3A%20${description}&image=${imageUrl}&webUrl=${currentUrl}`;
                 
                 console.log('카카오톡 공유 URL:', kakaoShareUrl);
                 
