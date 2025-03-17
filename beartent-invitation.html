@@ -734,22 +734,42 @@
             // DOM 로드 후 초기화 시도
             setTimeout(initKakao, 500);
             
-            // 모바일 기기 감지
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            // 모바일 기기 감지 - 더 엄격한 검증
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent);
+            const isApp = /KAKAOTALK/i.test(userAgent);
+            const isRealMobile = isMobile && !(/Win|Mac|Linux/i.test(userAgent));
             
-            // 공유 버튼에 이벤트 리스너 추가
+            console.log('사용자 에이전트:', userAgent);
+            console.log('모바일 감지:', isMobile);
+            console.log('카카오톡 앱 감지:', isApp);
+            console.log('실제 모바일:', isRealMobile);
+            
+            // 공유 버튼 변경
             const shareBtn = document.getElementById('kakao-share-btn');
             if (shareBtn) {
-                if (!isMobile) {
-                    // PC 웹에서는 버튼 텍스트 변경
-                    shareBtn.textContent = '초대장 링크 복사하기';
-                    shareBtn.addEventListener('click', function() {
+                // 모든 환경에서 공유 버튼 텍스트를 공통으로 설정
+                shareBtn.textContent = '초대장 공유하기';
+                shareBtn.addEventListener('click', function() {
+                    // 실제 모바일 기기인 경우만 카카오톡 SDK 방식 시도
+                    if (isRealMobile) {
+                        shareToKakao();
+                    } else {
+                        // PC나 모바일 웹 브라우저에서는 링크 복사
                         copyAndShowMessage();
-                    });
-                } else {
-                    // 모바일에서는 기존 방식 유지
-                    shareBtn.addEventListener('click', shareToKakao);
-                }
+                    }
+                });
+                
+                // 안내 텍스트 추가
+                const noticeDiv = document.createElement('div');
+                noticeDiv.style.fontSize = '12px';
+                noticeDiv.style.color = '#888';
+                noticeDiv.style.marginTop = '5px';
+                noticeDiv.style.textAlign = 'center';
+                noticeDiv.textContent = isRealMobile ? 
+                    '카카오톡 앱으로 공유합니다' : 
+                    'PC에서는 링크가 복사됩니다. 카카오톡에 붙여넣기 해주세요';
+                shareBtn.parentNode.appendChild(noticeDiv);
             }
         });
         
@@ -781,36 +801,48 @@
         function shareToKakao() {
             console.log('카카오톡 공유 시도...');
             
-            // 모바일 기기 감지 (iOS 및 Android)
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            // 모바일 기기 감지 - 더 정확한 검증
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent.toLowerCase());
+            const isApp = /KAKAOTALK/i.test(userAgent);
+            const isRealMobile = isMobile && !(/Win|Mac|Linux/i.test(userAgent));
             
-            // PC에서 접속한 경우 링크 복사로 대체
-            if (!isMobile) {
+            console.log('사용자 에이전트:', userAgent);
+            console.log('모바일 기기 감지:', isMobile);
+            console.log('카카오톡 앱 감지:', isApp);
+            console.log('실제 모바일 기기:', isRealMobile);
+            
+            // PC에서 접속한 경우 (또는 모바일이지만 PC 웹브라우저인 경우) 링크 복사로 대체
+            if (!isRealMobile) {
+                console.log('PC 환경 감지, 링크 복사로 대체합니다.');
                 copyAndShowMessage();
                 return;
             }
             
-            // 여기서부터는 모바일 환경에서만 실행
-            
-            // 카카오 SDK가 로드되지 않았거나 초기화되지 않았다면 초기화
-            if (typeof Kakao === 'undefined') {
-                console.error('카카오 SDK가 로드되지 않았습니다.');
-                alert('카카오톡 공유 기능을 사용할 수 없습니다. 페이지를 새로고침 후 다시 시도해 주세요.');
-                return;
-            }
-            
-            if (!Kakao.isInitialized()) {
-                console.log('Kakao SDK가 초기화되지 않았습니다. 초기화를 시도합니다.');
-                Kakao.init(kakaoJSKey);
-                kakaoInitialized = Kakao.isInitialized();
-                if (!kakaoInitialized) {
-                    console.error('카카오 SDK 초기화 실패!');
-                    alert('카카오톡 공유 기능을 초기화할 수 없습니다. 잠시 후 다시 시도해 주세요.');
-                    return;
-                }
-            }
+            // 여기서부터는 실제 모바일 환경에서만 실행
             
             try {
+                // 카카오 SDK가 로드되지 않았거나 초기화되지 않았다면 초기화
+                if (typeof Kakao === 'undefined') {
+                    console.error('카카오 SDK가 로드되지 않았습니다.');
+                    alert('카카오톡 공유 기능을 사용할 수 없습니다. 페이지를 새로고침 후 다시 시도해 주세요.');
+                    copyAndShowMessage(); // 에러시 대체 방법 제공
+                    return;
+                }
+                
+                if (!Kakao.isInitialized()) {
+                    console.log('Kakao SDK가 초기화되지 않았습니다. 초기화를 시도합니다.');
+                    Kakao.init(kakaoJSKey);
+                    kakaoInitialized = Kakao.isInitialized();
+                    
+                    if (!kakaoInitialized) {
+                        console.error('카카오 SDK 초기화 실패!');
+                        alert('카카오톡 공유 기능을 초기화할 수 없습니다. 잠시 후 다시 시도해 주세요.');
+                        copyAndShowMessage(); // 에러시 대체 방법 제공
+                        return;
+                    }
+                }
+                
                 // 현재 URL
                 const currentUrl = window.location.href;
                 
@@ -850,12 +882,19 @@
                 
                 console.log('공유 객체:', shareObject);
                 
-                // 모바일 환경에서는 기존 방식 사용
-                Kakao.Share.sendDefault(shareObject);
-                console.log('카카오톡 공유 함수 호출 완료 (모바일)');
+                // 모바일 환경에서 공유 시도
+                if (isRealMobile) {
+                    // 모바일 앱은 Kakao.Share API 사용
+                    Kakao.Share.sendDefault(shareObject);
+                    console.log('카카오톡 공유 함수 호출 완료 (모바일)');
+                } else {
+                    // 혹시나 여기까지 오게 되면 (이중 체크) 링크 복사로 대체
+                    console.log('PC 환경 감지, 링크 복사로 대체합니다.');
+                    copyAndShowMessage();
+                }
             } catch (e) {
                 console.error('카카오톡 공유 실패:', e);
-                alert('카카오톡 공유 중 오류가 발생했습니다: ' + e.message + '\n다시 시도해 주세요.');
+                alert('카카오톡 공유 중 오류가 발생했습니다: ' + e.message + '\n대체 방식으로 링크를 복사합니다.');
                 
                 // 링크 복사로 대체
                 copyToClipboard(window.location.href);
