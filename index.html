@@ -7,6 +7,10 @@
     <!-- 폰트 파일 미리 로드 -->
     <link rel="preload" href="BMEULJIROTTF.ttf" as="font" type="font/ttf" crossorigin>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- 카카오 SDK 추가 -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.0/kakao.min.js" 
+      integrity="sha384-l+xbElFSnPZ2rOQ+gcV2XkwWHtXezW5lfsB5It8wyPXQcI5WAqCQXqxn3KrRXWdN" 
+      crossorigin="anonymous"></script>
     <style>
         /* 을지로체 폰트 적용 */
         @font-face {
@@ -448,6 +452,53 @@
             padding: 0;
             margin-left: 10px;
         }
+
+        /* 알림 토스트 스타일 추가 */
+        .toast-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 공유 버튼 스타일 */
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .kakao-share-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: #FEE500;
+            color: #3c1e1e;
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .kakao-share-btn:before {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: url('https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png') no-repeat;
+            background-size: contain;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -490,7 +541,8 @@
                     <a href="https://naver.me/xdpQiNU7#reviewTab" class="naver-link" target="_blank">방문자 리뷰</a>
                     <a href="https://search.naver.com/search.naver?query=곰돌이포차+대구+블로그" class="naver-link" target="_blank">블로그 리뷰</a>
                     <a href="https://map.naver.com/p/directions/-/14314003.9086945,4282384.7259418,%EB%8C%80%EA%B5%AC%20%EB%B6%81%EA%B5%AC%20%EB%8C%80%ED%98%84%EB%82%A8%EB%A1%9C5%EA%B8%B8%204-1/-/transit?c=15.00,0,0,0,dh" class="naver-link" target="_blank">길찾기</a>
-                    <a href="javascript:void(0);" onclick="navigator.share({title: '곰돌이포차', url: 'https://naver.me/xdpQiNU7'})" class="naver-link">공유</a>
+                    <a href="javascript:void(0);" onclick="shareToKakao()" class="naver-link">카카오톡 공유</a>
+                    <a href="javascript:void(0);" onclick="shareContent()" class="naver-link">일반 공유</a>
                 </div>
             </div>
             
@@ -613,6 +665,9 @@
         </div>
     </div>
 
+    <!-- 토스트 메시지 추가 -->
+    <div class="toast-message" id="toastMessage">링크가 복사되었습니다!</div>
+
     <script>
         // 폰트 로딩 확인
         document.fonts.ready.then(function() {
@@ -620,6 +675,128 @@
             document.body.classList.add('fonts-loaded');
             console.log('BMEuljiro font has been loaded');
         });
+        
+        // 카카오 SDK가 로드되었는지 확인하는 변수
+        var kakaoSDKLoaded = false;
+
+        // 카카오 SDK 로드 확인
+        window.addEventListener('load', function() {
+            if (typeof Kakao !== 'undefined') {
+                kakaoSDKLoaded = true;
+                // 실제 앱에서는 자신의 JavaScript 키로 변경해야 합니다
+                try {
+                    // 카카오 SDK 초기화
+                    Kakao.init('6d497e3027c3b7fc61a9d46fa80147c3');
+                    console.log('Kakao SDK initialized:', Kakao.isInitialized());
+                } catch (e) {
+                    console.error('Kakao SDK initialization failed:', e);
+                }
+            } else {
+                console.error('Kakao SDK not loaded');
+            }
+        });
+        
+        // 개선된 카카오톡 공유 함수
+        function shareToKakao() {
+            if (!kakaoSDKLoaded || !Kakao.isInitialized()) {
+                alert('카카오톡 공유 기능을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.');
+                console.error('Kakao SDK not loaded or not initialized');
+                return;
+            }
+            
+            try {
+                // 현재 URL로부터 절대 URL 생성
+                const currentUrl = window.location.href;
+                // 도메인에 상관없이 사용할 수 있는 이미지 URL (Vercel 배포 주소 사용)
+                const imageUrl = 'https://gomdori-junhyeuks-projects.vercel.app/images/storebg.jpeg';
+                
+                Kakao.Share.sendDefault({
+                    objectType: 'feed',
+                    content: {
+                        title: '곰돌이포차 확장 이전 오픈 초대장',
+                        description: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
+                        imageUrl: imageUrl,
+                        link: {
+                            mobileWebUrl: currentUrl,
+                            webUrl: currentUrl,
+                        },
+                    },
+                    buttons: [
+                        {
+                            title: '초대장 보기',
+                            link: {
+                                mobileWebUrl: currentUrl,
+                                webUrl: currentUrl,
+                            },
+                        },
+                    ],
+                    // 카카오톡 공유 실패 시 콘솔에 로그 출력
+                    callback: function() {
+                        console.log('카카오톡 공유 성공');
+                    },
+                    serverCallbackArgs: {
+                        name: '곰돌이포차',
+                        type: 'invitation'
+                    },
+                });
+            } catch (e) {
+                console.error('카카오톡 공유 실패:', e);
+                alert('카카오톡 공유 중 오류가 발생했습니다. 다시 시도해 주세요.');
+            }
+        }
+        
+        // 기존 공유 함수 유지
+        function shareContent() {
+            const shareData = {
+                title: '곰돌이포차 확장 이전 오픈 초대장',
+                text: '2025년 3월 확장 이전 오픈! 정성과 맛으로 모시겠습니다.',
+                url: window.location.href
+            };
+            
+            // 모바일 기기에서 Web Share API 지원 여부 확인
+            if (navigator.share) {
+                navigator.share(shareData)
+                    .then(() => console.log('공유 성공'))
+                    .catch((error) => console.log('공유 실패:', error));
+            } else {
+                // 데스크톱이나 Web Share API를 지원하지 않는 기기에서는 URL 복사
+                copyToClipboard(window.location.href);
+                
+                // 토스트 메시지 표시
+                const toast = document.getElementById('toastMessage');
+                toast.style.display = 'block';
+                
+                // 3초 후 토스트 메시지 숨기기
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        // 클립보드에 텍스트 복사하는 함수
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text)
+                    .then(() => console.log('텍스트 복사 성공'))
+                    .catch((error) => console.log('텍스트 복사 실패:', error));
+            } else {
+                // 구형 브라우저용 복사 메서드
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';  // 화면에서 숨김
+                document.body.appendChild(textarea);
+                textarea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    console.log('텍스트 복사 성공 (레거시 방식)');
+                } catch (err) {
+                    console.log('텍스트 복사 실패 (레거시 방식):', err);
+                }
+                
+                document.body.removeChild(textarea);
+            }
+        }
         
         document.addEventListener('DOMContentLoaded', function() {
             // 폰트 로딩을 강제로 트리거
